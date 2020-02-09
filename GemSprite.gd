@@ -8,6 +8,9 @@ enum State {
 }
 
 var is_evaluated
+var lane_number
+var hit_time
+
 var current_sprite
 
 func _ready():

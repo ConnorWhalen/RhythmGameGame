@@ -11,17 +11,16 @@ var LANE_COUNT = 6
 var GEM_SPEED = 200
 var GREEN_LEEWAY_SECS = 0.1
 var YELLOW_LEEWAY_SECS = 0.2
-var GREEN_LEEWAY_DISTANCE = GEM_SPEED * GREEN_LEEWAY_SECS
-var YELLOW_LEEWAY_DISTANCE = GEM_SPEED * YELLOW_LEEWAY_SECS
 
-var EVALUATE_GREEN_TOP = 420 - GREEN_LEEWAY_DISTANCE
-var EVALUATE_GREEN_BOTTOM = 420 + GREEN_LEEWAY_DISTANCE
-var EVALUATE_YELLOW_TOP = 420 - YELLOW_LEEWAY_DISTANCE
-var EVALUATE_YELLOW_BOTTOM = 420 + YELLOW_LEEWAY_DISTANCE
-var CLEAR_HEIGHT = ProjectSettings.get_setting("display/window/size/height")
+var EVALUATE_HEIGHT = 420
+
+var SCREEN_WIDTH = ProjectSettings.get_setting("display/window/size/width")
+var SCREEN_HEIGHT = ProjectSettings.get_setting("display/window/size/height")
 
 var gem_list = []
-var gem_starts = [[0, 2], [1, 3], [2, 3.5], [3, 4], [4, 5], [5, 5.5]]
+var gem_starts = [[2, 3.0], [3, 3.0], [4, 3.5],
+				  [0, 4.0], [4, 4.5], [2, 5.0], [4, 5.5], [1, 6.0], [4, 6.5], [2, 7.0], [4, 7.5],
+				  [0, 8.0], [5, 8.5], [2, 9.0], [5, 9.5], [1,10.0], [5,10.5], [2,11.0], [5,11.5]]
 var elapsed
 var lane_input_rising
 var lane_input_pressed
@@ -35,28 +34,35 @@ func _ready():
 		lane_input_pressed.append(false)
 		var input_sprite = get_node("lane_input_" + str(i))
 		input_sprite.position.x = get_lane_x(i)
+	$bar.position = Vector2(SCREEN_WIDTH/2, EVALUATE_HEIGHT)
 
 
 func _process(delta):
-	elapsed += delta
+	elapsed = $MusicPlayer.get_position()
 	spawn_gems()
-	advance_gems(delta)
+	advance_gems()
 	update_inputs()
 	check_gems()
 
 
 func spawn_gems():
+	var hit_time
 	for i in range(gem_starts.size()-1, -1, -1):
-		if elapsed > gem_starts[i][1]:
-			spawn_gem(gem_starts[i][0])
+		hit_time = $MusicPlayer.beats_to_secs(gem_starts[i][1])
+		print(str(gem_starts[i][1]) + " " + str(hit_time))
+		if (elapsed - hit_time) * GEM_SPEED + EVALUATE_HEIGHT > -32:
+			print((elapsed - hit_time) * GEM_SPEED + EVALUATE_HEIGHT)
+			spawn_gem(gem_starts[i][0], hit_time)
 			gem_starts.remove(i)
 
 
-func spawn_gem(lane_number):
+func spawn_gem(lane_number, hit_time):
 	var gem = gem_scene.instance()
 	add_child(gem)
 	gem.position = Vector2(get_lane_x(lane_number), -gem.gem_size().y/2)
-	gem_list.append([gem, lane_number])
+	gem.lane_number = lane_number
+	gem.hit_time = hit_time
+	gem_list.append(gem)
 
 
 func get_lane_x(lane_number):
@@ -66,11 +72,11 @@ func get_lane_x(lane_number):
 	return x_pos
 
 
-func advance_gems(delta):
+func advance_gems():
 	var gem
 	for i in range(gem_list.size()):
-		gem = gem_list[i][0]
-		gem.position.y += delta * GEM_SPEED
+		gem = gem_list[i]
+		gem.position.y = (elapsed - gem.hit_time) * GEM_SPEED + EVALUATE_HEIGHT
 
 
 func update_inputs():
@@ -88,23 +94,19 @@ func update_inputs():
 
 func check_gems():
 	var gem
-	var lane_number
 	for i in range(gem_list.size()-1, -1, -1):
-		gem = gem_list[i][0]
-		lane_number = gem_list[i][1]
+		gem = gem_list[i]
 
-		if not gem.is_evaluated and lane_input_rising[lane_number]:
-			if gem.position.y >= EVALUATE_YELLOW_TOP and gem.position.y < EVALUATE_GREEN_TOP:
-				gem.set_state(GemSprite.State.YELLOW)
-			elif gem.position.y >= EVALUATE_GREEN_TOP and gem.position.y < EVALUATE_GREEN_BOTTOM:
+		if not gem.is_evaluated and lane_input_rising[gem.lane_number]:
+			if abs(elapsed-gem.hit_time) < GREEN_LEEWAY_SECS:
 				gem.set_state(GemSprite.State.GREEN)
-			if gem.position.y >= EVALUATE_GREEN_BOTTOM and gem.position.y < EVALUATE_YELLOW_BOTTOM:
+			elif abs(elapsed-gem.hit_time) < YELLOW_LEEWAY_SECS:
 				gem.set_state(GemSprite.State.YELLOW)
 
-		if not gem.is_evaluated and gem.position.y > EVALUATE_YELLOW_BOTTOM:
+		if not gem.is_evaluated and elapsed-gem.hit_time > YELLOW_LEEWAY_SECS:
 			gem.set_state(GemSprite.State.RED)
 		
-		if gem.position.y > CLEAR_HEIGHT + gem.gem_size().y/2:
+		if gem.position.y > SCREEN_HEIGHT + gem.gem_size().y/2:
 			remove_child(gem)
 			gem_list.remove(i)
 
