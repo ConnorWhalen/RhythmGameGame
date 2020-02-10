@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://GemSprite.gd" type="Script" id=1]
 [ext_resource path="res://sprites/gems.png" type="Texture" id=2]
+[ext_resource path="res://sprites/bar.png" type="Texture" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -16,12 +17,52 @@ region = Rect2( 0, 0, 32, 32 )
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 0, 32, 32, 32 )
+region = Rect2( 64, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 32, 32, 32, 32 )
+region = Rect2( 0, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 50, 300, 50 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 100, 300, 50 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 200, 300, 50 )
+
+[sub_resource type="AtlasTexture" id=8]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 300, 300, 50 )
+
+[sub_resource type="AtlasTexture" id=9]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 64, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=10]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 0, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=11]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 150, 300, 50 )
+
+[sub_resource type="AtlasTexture" id=12]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 250, 300, 50 )
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
@@ -40,3 +81,35 @@ texture = SubResource( 3 )
 [node name="RedGem" type="Sprite" parent="."]
 visible = false
 texture = SubResource( 4 )
+
+[node name="BarOffGem" type="Sprite" parent="."]
+visible = false
+texture = SubResource( 5 )
+
+[node name="BarGreenGem" type="Sprite" parent="."]
+visible = false
+texture = SubResource( 6 )
+
+[node name="BarYellowGem" type="Sprite" parent="."]
+visible = false
+texture = SubResource( 7 )
+
+[node name="BarRedGem" type="Sprite" parent="."]
+visible = false
+texture = SubResource( 8 )
+
+[node name="GreenGemPressed" type="Sprite" parent="."]
+visible = false
+texture = SubResource( 9 )
+
+[node name="YellowGemPressed" type="Sprite" parent="."]
+visible = false
+texture = SubResource( 10 )
+
+[node name="BarGreenGemPressed" type="Sprite" parent="."]
+visible = false
+texture = SubResource( 11 )
+
+[node name="BarYellowGemPressed" type="Sprite" parent="."]
+visible = false
+texture = SubResource( 12 )

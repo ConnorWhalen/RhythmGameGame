@@ -1,15 +1,26 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Stage.gd" type="Script" id=1]
 [ext_resource path="res://sprites/bar.png" type="Texture" id=2]
 [ext_resource path="res://sprites/gems.png" type="Texture" id=3]
 [ext_resource path="res://songs/weekend-fan-club-third-copy.ogg" type="AudioStream" id=4]
 [ext_resource path="res://MusicPlayer.gd" type="Script" id=5]
+[ext_resource path="res://MIDIParser.gd" type="Script" id=6]
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 300, 50 )
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
 atlas = ExtResource( 3 )
-region = Rect2( 0, 64, 32, 32 )
+region = Rect2( 32, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 0, 350, 300, 50 )
 
 [node name="Stage" type="Node2D"]
 script = ExtResource( 1 )
@@ -19,12 +30,17 @@ __meta__ = {
 
 [node name="bar" type="Sprite" parent="."]
 position = Vector2( 150, 420 )
-texture = ExtResource( 2 )
+texture = SubResource( 2 )
 
 [node name="lane_input_0" type="Sprite" parent="."]
 visible = false
 position = Vector2( 0, 420 )
 texture = SubResource( 1 )
+
+[node name="lane_input_6" type="Sprite" parent="."]
+visible = false
+position = Vector2( 150, 420 )
+texture = SubResource( 3 )
 
 [node name="lane_input_1" type="Sprite" parent="."]
 visible = false
@@ -54,3 +70,6 @@ texture = SubResource( 1 )
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
 script = ExtResource( 5 )
+
+[node name="MIDIParser" type="Node2D" parent="."]
+script = ExtResource( 6 )
