@@ -24,6 +24,7 @@ var NOTE_LANE_MAP = {52: 0, 50: 1, 48: 2, 40: 3, 38: 4, 36: 5, 35: 6}
 
 
 var note_starts = []
+var tempo = 120.0
 
 
 func _ready():
@@ -32,6 +33,10 @@ func _ready():
 
 func _process(delta):
 	pass
+
+
+func beats_to_secs(beat):
+	return (beat/tempo) * 60
 
 
 func parse_file(filename):
@@ -71,7 +76,6 @@ func parse_file(filename):
 	var event_type
 	var event_channel
 	var event_param_1
-	var tempo = 120.0
 	var current_beat = 0.0
 	while file.get_position() < file.get_len():
 		var event_delta_time = float(parse_variable_length(file))

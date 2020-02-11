@@ -1,10 +1,13 @@
 extends Node2D
 
+signal mode_stage
+signal mode_menu
+
 onready var gem_scene = preload("res://Gem.tscn")
 onready var GemSprite = preload("res://GemSprite.gd")
 
 var LANE_SIZE = 40
-var FIRST_LANE = 10 + 16
+var FIRST_LANE = 160 + 20
 var LANE_GAP = 40
 var LANE_COUNT = 7
 
@@ -34,11 +37,15 @@ func _ready():
 			var input_sprite = get_node("lane_input_" + str(i))
 			input_sprite.position.x = get_lane_x(i)
 	$bar.position = Vector2(SCREEN_WIDTH/2, EVALUATE_HEIGHT)
+	$lane_input_6.position = Vector2(SCREEN_WIDTH/2, EVALUATE_HEIGHT)
 	$MIDIParser.parse_file("res://songs/weekend fan club.mid")
 	gem_starts = $MIDIParser.note_starts
+	$MusicPlayer.set_song("res://songs/weekend-fan-club-third-copy.ogg")
 
 
 func _process(delta):
+	if $MusicPlayer.completed:
+		emit_signal("mode_menu")
 	elapsed = $MusicPlayer.get_position()
 	spawn_gems()
 	advance_gems()
@@ -49,7 +56,7 @@ func _process(delta):
 func spawn_gems():
 	var hit_time
 	for i in range(gem_starts.size()-1, -1, -1):
-		hit_time = $MusicPlayer.beats_to_secs(gem_starts[i][1])
+		hit_time = $MIDIParser.beats_to_secs(gem_starts[i][1])
 		if (elapsed - hit_time) * GEM_SPEED + EVALUATE_HEIGHT > -32:
 			spawn_gem(gem_starts[i][0], hit_time)
 			gem_starts.remove(i)

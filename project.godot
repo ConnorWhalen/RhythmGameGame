@@ -16,14 +16,13 @@ _global_script_class_icons={
 [application]
 
 config/name="Rhythm Game Game"
-run/main_scene="res://Stage.tscn"
-boot_splash/image="res://sprites/gems.png"
+run/main_scene="res://Main.tscn"
+boot_splash/image="res://sprites/Fullscreens-1.png.png"
 boot_splash/bg_color=Color( 0.137255, 0.137255, 0.137255, 0 )
-config/icon="res://icon.png"
 
 [display]
 
-window/size/width=300
+window/size/width=600
 window/size/height=512
 
 [input]
