@@ -20,7 +20,8 @@ var META_TIME_SIG_EVENT = 0x58
 var TICKS_PER_SECOND = 0
 var TICKS_PER_BEAT = 1
 
-var NOTE_LANE_MAP = {52: 0, 50: 1, 48: 2, 40: 3, 38: 4, 36: 5, 35: 6}
+var NOTE_LANE_MAP = {52: 0, 50: 1, 48: 2, 40: 3, 38: 4, 36: 5, 53: 6, 51: 7, 49: 8, 41: 9, 39: 10, 37: 11, 35: 12, 34: 13}
+var HOLD_NOTES = [53, 51, 49, 41, 39, 37, 34]
 
 
 var note_starts = []
@@ -86,6 +87,7 @@ func parse_file(filename):
 	var event_channel
 	var event_param_1
 	var current_beat = 0.0
+	var hold_note_starts = {53: 0, 51: 0, 49: 0, 41: 0, 39: 0, 37: 0, 34: 0}
 	while file.get_position() < file.get_len():
 		var event_delta_time = float(parse_variable_length(file))
 		match time_division_mode:
@@ -106,10 +108,15 @@ func parse_file(filename):
 			NOTE_OFF_EVENT:
 				var note_number = event_param_1
 				var velocity = file.get_8()
+				if HOLD_NOTES.has(note_number):
+					note_starts.append([NOTE_LANE_MAP[note_number], hold_note_starts[note_number], current_beat])
 			NOTE_ON_EVENT:
 				var note_number = event_param_1
 				var velocity = file.get_8()
-				note_starts.append([NOTE_LANE_MAP[note_number], current_beat])
+				if HOLD_NOTES.has(note_number):
+					hold_note_starts[note_number] = current_beat
+				else:
+					note_starts.append([NOTE_LANE_MAP[note_number], current_beat, 0])
 			NOTE_AFTERTOUCH_EVENT:
 				var note_number = event_param_1
 				var aftertouch_value = file.get_8()

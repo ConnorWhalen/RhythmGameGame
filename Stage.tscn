@@ -15,7 +15,7 @@ region = Rect2( 0, 0, 300, 50 )
 [sub_resource type="AtlasTexture" id=2]
 flags = 4
 atlas = ExtResource( 4 )
-region = Rect2( 32, 32, 32, 32 )
+region = Rect2( 0, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4

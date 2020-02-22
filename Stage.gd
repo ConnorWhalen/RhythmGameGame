@@ -17,16 +17,21 @@ var LANE_COUNT = 7
 var GEM_SPEED = 200
 var GREEN_LEEWAY_SECS = 0.1
 var YELLOW_LEEWAY_SECS = 0.2
+var HOLD_PROGRESS_PERIOD = 0.1
 
 var EVALUATE_HEIGHT = 420
 
 var GREEN_POINTS = 100
 var YELLOW_POINTS = 50
+var GREEN_HOLD_POINTS = 10
+var YELLOW_HOLD_POINTS = 5
 
 var gem_list = []
 var gem_starts = []
+var held_gems = []
 var elapsed
 var lane_input_rising
+var lane_input_held
 var lane_input_pressed
 var score = 0
 var gem_count = 0
@@ -43,15 +48,17 @@ func _ready():
 func init(song_data):
 	elapsed = 0
 	lane_input_rising = []
+	lane_input_held = []
 	lane_input_pressed = []
 	for i in range(LANE_COUNT):
 		lane_input_rising.append(false)
+		lane_input_held.append(false)
 		lane_input_pressed.append(false)
-		if i < 6:
-			var input_sprite = get_node("lane_input_" + str(i))
+		if i < 12:
+			var input_sprite = get_node("lane_input_" + str(i%6))
 			input_sprite.position.x = get_lane_x(i)
 	$bar.position = Vector2(SCREEN_WIDTH/2, EVALUATE_HEIGHT)
-	$lane_input_6.position = Vector2(SCREEN_WIDTH/2, EVALUATE_HEIGHT)
+	$lane_input_6.position = Vector2(get_lane_x(12), EVALUATE_HEIGHT)
 	$MIDIParser.parse_file(song_data[1])
 	gem_starts = $MIDIParser.note_starts
 	$MusicPlayer.set_song(song_data[0])
@@ -71,34 +78,43 @@ func _process(delta):
 
 func spawn_gems():
 	var hit_time
+	var hold_end
 	for i in range(gem_starts.size()-1, -1, -1):
 		hit_time = $MIDIParser.beats_to_secs(gem_starts[i][1])
+		hold_end = $MIDIParser.beats_to_secs(gem_starts[i][2])
 		if (elapsed - hit_time) * GEM_SPEED + EVALUATE_HEIGHT > -32:
-			spawn_gem(gem_starts[i][0], hit_time)
+			spawn_gem(gem_starts[i][0], hit_time, hold_end)
 			gem_starts.remove(i)
 
 
-func spawn_gem(lane_number, hit_time):
+func spawn_gem(lane_number, hit_time, hold_end):
 	var gem = gem_scene.instance()
 	add_child(gem)
-	if lane_number < 6:
-		gem.position = Vector2(get_lane_x(lane_number), -gem.gem_size().y/2)
+	gem.position = Vector2(get_lane_x(lane_number), -gem.gem_size().y/2)
+	if lane_number < 12:
+		gem.lane_number = lane_number%6
 		gem.z_index = 2
+		if lane_number >= 6:
+			gem.set_hold((hold_end - hit_time) * GEM_SPEED)
 	else:
-		gem.position = Vector2(SCREEN_WIDTH/2, -gem.gem_size().y/2)
+		gem.lane_number = 6
 		gem.set_type(GemSprite.Type.BAR)
 		gem.z_index = 1
-	gem.lane_number = lane_number
+		if lane_number == 13:
+			gem.set_hold((hold_end - hit_time) * GEM_SPEED)
 	gem.hit_time = hit_time
 	gem_list.append(gem)
 	gem_count += 1
 
 
 func get_lane_x(lane_number):
-	var x_pos = lane_number * LANE_SIZE + FIRST_LANE
-	if lane_number >= LANE_COUNT/2:
-		x_pos += LANE_GAP
-	return x_pos
+	if lane_number < 12:
+		var x_pos = lane_number%6 * LANE_SIZE + FIRST_LANE
+		if lane_number%6 >= LANE_COUNT/2:
+			x_pos += LANE_GAP
+		return x_pos
+	else:
+		return SCREEN_WIDTH/2
 
 
 func advance_gems():
@@ -112,10 +128,8 @@ func update_inputs():
 	var lane_pressed
 	for i in range(LANE_COUNT):
 		lane_pressed = Input.is_action_pressed("lane_" + str(i))
-		if lane_input_pressed[i] == false and lane_pressed:
-			lane_input_rising[i] = true
-		else:
-			lane_input_rising[i] = false
+		lane_input_rising[i] = not lane_input_pressed[i] and lane_pressed
+		lane_input_held[i] = lane_input_pressed[i] and lane_pressed
 
 		lane_input_pressed[i] = lane_pressed
 		get_node("lane_input_" + str(i)).visible = lane_pressed
@@ -127,6 +141,23 @@ func check_gems():
 	for i in range(LANE_COUNT):
 		lanes_used.append(false)
 	var remove_indices = []
+	var held_remove_indices = []
+
+	for i in range(held_gems.size()):
+		gem = held_gems[i]
+		if gem.hold_complete:
+			held_remove_indices.append(i)
+		elif lane_input_held[gem.lane_number]:
+			gem.update_tail(gem.position.y-EVALUATE_HEIGHT)
+			while gem.hold_progress_time < elapsed - gem.hit_time and gem.hold_progress_time < gem.note_length:
+				if gem.current_state == GemSprite.State.GREEN:
+					score += GREEN_HOLD_POINTS
+				elif gem.current_state == GemSprite.State.YELLOW:
+					score += YELLOW_HOLD_POINTS
+				gem.hold_progress_time += HOLD_PROGRESS_PERIOD
+		else:
+			current_streak = 0
+			held_remove_indices.append(i)
 
 	for i in range(gem_list.size()):
 		gem = gem_list[i]
@@ -140,17 +171,22 @@ func check_gems():
 		if not gem.is_evaluated and elapsed-gem.hit_time > YELLOW_LEEWAY_SECS:
 			red_hit(gem)
 		
-		if gem.position.y > SCREEN_HEIGHT + gem.gem_size().y/2:
+		if gem.position.y - gem.note_length > SCREEN_HEIGHT + gem.gem_size().y/2:
 			remove_child(gem)
 			remove_indices.append(i)
 
 	for i in range(remove_indices.size()-1, -1, -1):
 		gem_list.remove(remove_indices[i])
 
+	for i in range(held_remove_indices.size()-1, -1, -1):
+		held_gems.remove(held_remove_indices[i])
+
 
 func green_hit(gem, lanes_used):
 	gem.set_state(GemSprite.State.GREEN)
 	lanes_used[gem.lane_number] = true
+	if gem.is_hold:
+		held_gems.append(gem)
 	score += GREEN_POINTS
 	green_count += 1
 	current_streak += 1
@@ -161,6 +197,8 @@ func green_hit(gem, lanes_used):
 func yellow_hit(gem, lanes_used):
 	gem.set_state(GemSprite.State.YELLOW)
 	lanes_used[gem.lane_number] = true
+	if gem.is_hold:
+		held_gems.append(gem)
 	score += YELLOW_POINTS
 	yellow_count += 1
 	current_streak += 1
