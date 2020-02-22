@@ -3,7 +3,8 @@ extends Node2D
 enum State {
 	ENTER,
 	MAIN_MENU,
-	SETTINGS_MENU
+	SETTINGS_MENU,
+	SONG_MENU
 }
 
 enum Option {
@@ -18,6 +19,8 @@ var current_state
 var current_selection
 
 var debounce = false
+var debounce_up = false
+var debounce_down = false
 
 
 func _ready():
@@ -27,6 +30,10 @@ func _ready():
 func _process(delta):
 	if debounce and not Input.is_action_pressed("ui_accept"):
 		debounce = false
+	if debounce_up and not Input.is_action_pressed("ui_up"):
+		debounce_up = false
+	if debounce_down and not Input.is_action_pressed("ui_down"):
+		debounce_down = false
 	match current_state:
 		State.ENTER:
 			if Input.is_action_pressed("ui_accept"):
@@ -42,7 +49,8 @@ func _process(delta):
 			elif not debounce and Input.is_action_pressed("ui_accept"):
 				match current_selection:
 					Option.PLAYSONG:
-						emit_signal("mode_stage")
+						set_state(State.SONG_MENU)
+						debounce = true
 					Option.SETTINGS:
 						set_state(State.SETTINGS_MENU)
 						debounce = true
@@ -50,6 +58,15 @@ func _process(delta):
 			if not debounce and Input.is_action_pressed("ui_accept"):
 				set_state(State.MAIN_MENU)
 				debounce = true
+		State.SONG_MENU:
+			if not debounce and Input.is_action_pressed("ui_accept"):
+				emit_signal("mode_stage", $SongSelector.get_selected_ogg_and_midi())
+			if not debounce_up and Input.is_action_pressed("ui_up"):
+				$SongSelector.up()
+				debounce_up = true
+			if not debounce_down and Input.is_action_pressed("ui_down"):
+				$SongSelector.down()
+				debounce_down = true
 
 
 func set_state(state):
@@ -66,6 +83,9 @@ func set_state(state):
 		State.SETTINGS_MENU:
 			$PressEnterText.visible = false
 			$SettingsBG.visible = false
+		State.SONG_MENU:
+			$ChooseSongBG.visible = false
+			$SongSelector.visible = false
 
 	current_state = state
 
@@ -80,6 +100,11 @@ func set_state(state):
 			$Arrow.visible = true
 			$TitleBG.visible = true
 			current_selection = Option.PLAYSONG
+			$Arrow.set_state(current_selection)
 		State.SETTINGS_MENU:
 			$PressEnterText.visible = true
 			$SettingsBG.visible = true
+		State.SONG_MENU:
+			$ChooseSongBG.visible = true
+			$SongSelector.visible = true
+			$SongSelector.reset()

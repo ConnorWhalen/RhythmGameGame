@@ -24,7 +24,7 @@ var NOTE_LANE_MAP = {52: 0, 50: 1, 48: 2, 40: 3, 38: 4, 36: 5, 35: 6}
 
 
 var note_starts = []
-var tempo = 120.0
+var tempos = []
 
 
 func _ready():
@@ -36,7 +36,16 @@ func _process(delta):
 
 
 func beats_to_secs(beat):
-	return (beat/tempo) * 60
+	var secs = 0
+	for i in range(tempos.size()):
+		if i < tempos.size()-1 and beat > tempos[i+1][1]:
+			secs += ((tempos[i+1][1] - tempos[i][1])/tempos[i][0]) * 60
+		else:
+			secs += ((beat - tempos[i][1])/tempos[i][0]) * 60
+			break
+
+
+	return secs
 
 
 func parse_file(filename):
@@ -128,7 +137,8 @@ func parse_file(filename):
 						for i in range(3):
 							us_per_quarter *= 256
 							us_per_quarter += file.get_8()
-						tempo = 60.0 * 1000 * 1000 / us_per_quarter
+						var tempo = 60.0 * 1000 * 1000 / us_per_quarter
+						tempos.append([tempo, current_beat])
 					META_TIME_SIG_EVENT:
 						continue
 					_:

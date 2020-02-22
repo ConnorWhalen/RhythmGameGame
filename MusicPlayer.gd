@@ -29,6 +29,7 @@ func get_position():
 
 func set_song(filename):
 	var vstream = load(filename)
+	vstream.loop = false
 	set_stream(vstream)
 
 

@@ -6,6 +6,9 @@ signal mode_menu
 onready var gem_scene = preload("res://Gem.tscn")
 onready var GemSprite = preload("res://GemSprite.gd")
 
+var SCREEN_WIDTH = ProjectSettings.get_setting("display/window/size/width")
+var SCREEN_HEIGHT = ProjectSettings.get_setting("display/window/size/height")
+
 var LANE_SIZE = 40
 var FIRST_LANE = 160 + 20
 var LANE_GAP = 40
@@ -17,16 +20,27 @@ var YELLOW_LEEWAY_SECS = 0.2
 
 var EVALUATE_HEIGHT = 420
 
-var SCREEN_WIDTH = ProjectSettings.get_setting("display/window/size/width")
-var SCREEN_HEIGHT = ProjectSettings.get_setting("display/window/size/height")
+var GREEN_POINTS = 100
+var YELLOW_POINTS = 50
 
 var gem_list = []
 var gem_starts = []
 var elapsed
 var lane_input_rising
 var lane_input_pressed
+var score = 0
+var gem_count = 0
+var green_count = 0
+var yellow_count = 0
+var red_count = 0
+var current_streak = 0
+var best_streak = 0
 
 func _ready():
+	pass
+
+
+func init(song_data):
 	elapsed = 0
 	lane_input_rising = []
 	lane_input_pressed = []
@@ -38,9 +52,9 @@ func _ready():
 			input_sprite.position.x = get_lane_x(i)
 	$bar.position = Vector2(SCREEN_WIDTH/2, EVALUATE_HEIGHT)
 	$lane_input_6.position = Vector2(SCREEN_WIDTH/2, EVALUATE_HEIGHT)
-	$MIDIParser.parse_file("res://songs/weekend fan club.mid")
+	$MIDIParser.parse_file(song_data[1])
 	gem_starts = $MIDIParser.note_starts
-	$MusicPlayer.set_song("res://songs/weekend-fan-club-third-copy.ogg")
+	$MusicPlayer.set_song(song_data[0])
 
 
 func _process(delta):
@@ -51,6 +65,8 @@ func _process(delta):
 	advance_gems()
 	update_inputs()
 	check_gems()
+	$ScoreDisplay.text = str(score)
+	$StreakDisplay.text = str(current_streak)
 
 
 func spawn_gems():
@@ -75,6 +91,7 @@ func spawn_gem(lane_number, hit_time):
 	gem.lane_number = lane_number
 	gem.hit_time = hit_time
 	gem_list.append(gem)
+	gem_count += 1
 
 
 func get_lane_x(lane_number):
@@ -116,14 +133,12 @@ func check_gems():
 
 		if not gem.is_evaluated and lane_input_rising[gem.lane_number] and not lanes_used[gem.lane_number]:
 			if abs(elapsed-gem.hit_time) < GREEN_LEEWAY_SECS:
-				gem.set_state(GemSprite.State.GREEN)
-				lanes_used[gem.lane_number] = true
+				green_hit(gem, lanes_used)
 			elif abs(elapsed-gem.hit_time) < YELLOW_LEEWAY_SECS:
-				gem.set_state(GemSprite.State.YELLOW)
-				lanes_used[gem.lane_number] = true
+				yellow_hit(gem, lanes_used)
 
 		if not gem.is_evaluated and elapsed-gem.hit_time > YELLOW_LEEWAY_SECS:
-			gem.set_state(GemSprite.State.RED)
+			red_hit(gem)
 		
 		if gem.position.y > SCREEN_HEIGHT + gem.gem_size().y/2:
 			remove_child(gem)
@@ -131,3 +146,29 @@ func check_gems():
 
 	for i in range(remove_indices.size()-1, -1, -1):
 		gem_list.remove(remove_indices[i])
+
+
+func green_hit(gem, lanes_used):
+	gem.set_state(GemSprite.State.GREEN)
+	lanes_used[gem.lane_number] = true
+	score += GREEN_POINTS
+	green_count += 1
+	current_streak += 1
+	if current_streak > best_streak:
+		best_streak = current_streak
+
+
+func yellow_hit(gem, lanes_used):
+	gem.set_state(GemSprite.State.YELLOW)
+	lanes_used[gem.lane_number] = true
+	score += YELLOW_POINTS
+	yellow_count += 1
+	current_streak += 1
+	if current_streak > best_streak:
+		best_streak = current_streak
+
+
+func red_hit(gem):
+	gem.set_state(GemSprite.State.RED)
+	red_count += 1
+	current_streak = 0

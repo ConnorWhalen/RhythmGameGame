@@ -72,6 +72,7 @@ position = Vector2( 150, 420 )
 texture = SubResource( 3 )
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+editor/display_folded = true
 script = ExtResource( 5 )
 
 [node name="start_timer" type="Timer" parent="MusicPlayer"]
@@ -84,6 +85,38 @@ one_shot = true
 
 [node name="MIDIParser" type="Node2D" parent="."]
 script = ExtResource( 6 )
+
+[node name="ScoreDisplay" type="RichTextLabel" parent="."]
+margin_left = 65.0
+margin_top = 10.0
+margin_right = 150.0
+margin_bottom = 25.0
+text = "0"
+scroll_active = false
+
+[node name="SCORE" type="RichTextLabel" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 57.0
+margin_bottom = 33.0
+text = "SCORE:"
+scroll_active = false
+
+[node name="StreakDisplay" type="RichTextLabel" parent="."]
+margin_left = 65.0
+margin_top = 30.0
+margin_right = 150.0
+margin_bottom = 45.0
+text = "0"
+scroll_active = false
+
+[node name="STREAK" type="RichTextLabel" parent="."]
+margin_left = 10.0
+margin_top = 30.0
+margin_right = 60.0
+margin_bottom = 45.0
+text = "STREAK:"
+scroll_active = false
 [connection signal="finished" from="MusicPlayer" to="MusicPlayer" method="_on_MusicPlayer_finished"]
 [connection signal="timeout" from="MusicPlayer/start_timer" to="MusicPlayer" method="_on_start_timer_timeout"]
 [connection signal="timeout" from="MusicPlayer/end_timer" to="MusicPlayer" method="_on_end_timer_timeout"]

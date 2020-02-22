@@ -1,29 +1,36 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Menu.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Fullscreens-1.png.png" type="Texture" id=2]
 [ext_resource path="res://sprites/Fullscreens-2.png.png" type="Texture" id=3]
-[ext_resource path="res://sprites/text.png" type="Texture" id=4]
-[ext_resource path="res://Arrow.gd" type="Script" id=5]
+[ext_resource path="res://sprites/Fullscreens-4.png.png" type="Texture" id=4]
+[ext_resource path="res://sprites/text.png" type="Texture" id=5]
+[ext_resource path="res://Arrow.gd" type="Script" id=6]
+[ext_resource path="res://SongSelector.gd" type="Script" id=7]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
-atlas = ExtResource( 4 )
+atlas = ExtResource( 5 )
 region = Rect2( 0, 0, 300, 100 )
 
 [sub_resource type="AtlasTexture" id=2]
 flags = 4
-atlas = ExtResource( 4 )
+atlas = ExtResource( 5 )
 region = Rect2( 0, 100, 300, 100 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
-atlas = ExtResource( 4 )
+atlas = ExtResource( 5 )
 region = Rect2( 0, 200, 300, 100 )
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 4
-atlas = ExtResource( 4 )
+atlas = ExtResource( 5 )
+region = Rect2( 0, 300, 300, 100 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 5 )
 region = Rect2( 0, 300, 300, 100 )
 
 [node name="Menu" type="Node2D"]
@@ -37,6 +44,11 @@ texture = ExtResource( 2 )
 visible = false
 position = Vector2( 300, 256 )
 texture = ExtResource( 3 )
+
+[node name="ChooseSongBG" type="Sprite" parent="."]
+visible = false
+position = Vector2( 300, 256 )
+texture = ExtResource( 4 )
 
 [node name="PressEnterText" type="Sprite" parent="."]
 position = Vector2( 300, 460 )
@@ -57,4 +69,14 @@ visible = false
 position = Vector2( 328, 435 )
 scale = Vector2( 0.25, 0.25 )
 texture = SubResource( 4 )
-script = ExtResource( 5 )
+script = ExtResource( 6 )
+
+[node name="SongSelector" type="Node2D" parent="."]
+visible = false
+position = Vector2( 300, 0 )
+script = ExtResource( 7 )
+
+[node name="Arrow" type="Sprite" parent="SongSelector"]
+position = Vector2( -50, 45 )
+scale = Vector2( 0.25, 0.25 )
+texture = SubResource( 5 )

@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://SongSelection.gd" type="Script" id=1]
+
+[node name="SongSelection" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Title" type="RichTextLabel" parent="."]
+margin_right = 300.0
+margin_bottom = 20.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Title of Song"
+scroll_active = false
+
+[node name="Artist" type="RichTextLabel" parent="."]
+margin_left = -1.52588e-05
+margin_top = 22.7812
+margin_right = 300.0
+margin_bottom = 42.7812
+rect_scale = Vector2( 1.25, 1.25 )
+text = "Artist of Song"
+scroll_active = false
+
+[node name="Year" type="RichTextLabel" parent="."]
+margin_left = -0.379684
+margin_top = 41.8344
+margin_right = 299.62
+margin_bottom = 67.8344
+text = "2020"
+
+[node name="Author" type="RichTextLabel" parent="."]
+margin_left = -0.3797
+margin_top = 55.8138
+margin_right = 299.62
+margin_bottom = 75.8138
+text = "Chart by Connor"
+
+[node name="Duration" type="RichTextLabel" parent="."]
+margin_left = 0.620316
+margin_top = 71.4922
+margin_right = 299.62
+margin_bottom = 91.4922
+text = "3:15"
+scroll_active = false
