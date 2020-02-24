@@ -1,0 +1,147 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Results.gd" type="Script" id=1]
+[ext_resource path="res://sprites/Fullscreens-5.png.png" type="Texture" id=2]
+[ext_resource path="res://sprites/gems.png" type="Texture" id=3]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 96, 0, 32, 32 )
+
+[node name="Results" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="bg" type="Sprite" parent="."]
+position = Vector2( 300, 256 )
+texture = ExtResource( 2 )
+
+[node name="ControlsText" type="RichTextLabel" parent="."]
+margin_left = 253.558
+margin_top = 488.51
+margin_right = 372.558
+margin_bottom = 508.51
+text = "Menu: ENTER"
+scroll_active = false
+
+[node name="ScoreText" type="RichTextLabel" parent="."]
+margin_left = 95.0
+margin_top = 33.0
+margin_right = 198.0
+margin_bottom = 47.0
+rect_scale = Vector2( 5, 5 )
+text = "100000000000"
+scroll_active = false
+
+[node name="ScoreLabelText" type="RichTextLabel" parent="."]
+margin_left = 33.5359
+margin_top = 59.5853
+margin_right = 85.5359
+margin_bottom = 84.5853
+text = "SCORE"
+scroll_active = false
+
+[node name="TotalLabelText" type="RichTextLabel" parent="."]
+margin_left = 353.561
+margin_top = 308.121
+margin_right = 409.561
+margin_bottom = 348.121
+text = "TOTAL"
+scroll_active = false
+
+[node name="Green" type="Sprite" parent="."]
+position = Vector2( 370.512, 156.868 )
+texture = SubResource( 1 )
+
+[node name="Yellow" type="Sprite" parent="."]
+position = Vector2( 370.512, 210.132 )
+texture = SubResource( 2 )
+
+[node name="Red" type="Sprite" parent="."]
+position = Vector2( 372.268, 268.665 )
+texture = SubResource( 3 )
+
+[node name="PercentText" type="RichTextLabel" parent="."]
+margin_left = 35.7049
+margin_top = 169.901
+margin_right = 83.7049
+margin_bottom = 185.901
+rect_scale = Vector2( 6, 10 )
+text = "100.0%"
+
+[node name="GreenText" type="RichTextLabel" parent="."]
+margin_left = 414.341
+margin_top = 150.0
+margin_right = 521.341
+margin_bottom = 173.0
+text = "X 1000000"
+
+[node name="YellowText" type="RichTextLabel" parent="."]
+margin_left = 414.0
+margin_top = 204.0
+margin_right = 515.0
+margin_bottom = 229.0
+text = "X 1000000"
+
+[node name="RedText" type="RichTextLabel" parent="."]
+margin_left = 414.0
+margin_top = 262.0
+margin_right = 499.0
+margin_bottom = 286.0
+text = "X 1000000"
+
+[node name="TotalText" type="RichTextLabel" parent="."]
+margin_left = 429.292
+margin_top = 308.0
+margin_right = 517.292
+margin_bottom = 329.561
+text = "1000000"
+
+[node name="GreenPercentText" type="RichTextLabel" parent="."]
+margin_left = 516.512
+margin_top = 150.0
+margin_right = 570.512
+margin_bottom = 173.415
+text = "88.8%"
+scroll_active = false
+
+[node name="YellowPercentText" type="RichTextLabel" parent="."]
+margin_left = 516.0
+margin_top = 204.097
+margin_right = 574.853
+margin_bottom = 229.097
+text = "88.8%"
+scroll_active = false
+
+[node name="RedPercentText" type="RichTextLabel" parent="."]
+margin_left = 516.0
+margin_top = 262.0
+margin_right = 582.0
+margin_bottom = 284.0
+text = "88.8%"
+scroll_active = false
+
+[node name="StreakLabelText" type="RichTextLabel" parent="."]
+margin_left = 353.249
+margin_top = 338.0
+margin_right = 421.249
+margin_bottom = 360.364
+text = "STREAK"
+scroll_active = false
+
+[node name="StreakText" type="RichTextLabel" parent="."]
+margin_left = 429.0
+margin_top = 338.388
+margin_right = 529.932
+margin_bottom = 363.388
+text = "1000000"

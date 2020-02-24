@@ -14,6 +14,7 @@ enum Option {
 
 signal mode_stage
 signal mode_menu
+signal mode_results
 
 var current_state
 var current_selection
@@ -60,13 +61,19 @@ func _process(delta):
 				debounce = true
 		State.SONG_MENU:
 			if not debounce and Input.is_action_pressed("ui_accept"):
-				emit_signal("mode_stage", $SongSelector.get_selected_ogg_and_midi())
+				emit_signal("mode_stage", $SongSelector.get_stage_data())
 			if not debounce_up and Input.is_action_pressed("ui_up"):
 				$SongSelector.up()
 				debounce_up = true
 			if not debounce_down and Input.is_action_pressed("ui_down"):
 				$SongSelector.down()
 				debounce_down = true
+			if Input.is_action_pressed("ui_left"):
+				$SongSelector.left()
+			elif Input.is_action_pressed("ui_right"):
+				$SongSelector.right()
+			if Input.is_action_pressed("ui_back"):
+				set_state(State.MAIN_MENU)
 
 
 func set_state(state):
@@ -81,11 +88,14 @@ func set_state(state):
 			$Arrow.visible = false
 			$TitleBG.visible = false
 		State.SETTINGS_MENU:
-			$PressEnterText.visible = false
+			$InputMap.visible = false
 			$SettingsBG.visible = false
+			$SettingsControlsText.visible = false
+			$SettingsDescription.visible = false
 		State.SONG_MENU:
 			$ChooseSongBG.visible = false
 			$SongSelector.visible = false
+			$SongSelectControlsText.visible = false
 
 	current_state = state
 
@@ -102,9 +112,12 @@ func set_state(state):
 			current_selection = Option.PLAYSONG
 			$Arrow.set_state(current_selection)
 		State.SETTINGS_MENU:
-			$PressEnterText.visible = true
+			$InputMap.visible = true
 			$SettingsBG.visible = true
+			$SettingsControlsText.visible = true
+			$SettingsDescription.visible = true
 		State.SONG_MENU:
 			$ChooseSongBG.visible = true
 			$SongSelector.visible = true
+			$SongSelectControlsText.visible = true
 			$SongSelector.reset()

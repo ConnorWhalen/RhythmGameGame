@@ -2,8 +2,10 @@ extends Node2D
 
 
 enum SongFileItem {
+	SONG_FILE
 	OGG_FILE
-	MIDI_FILE
+	NORMAL_MIDI_FILE
+	ADVANCED_MIDI_FILE
 	SONG_TITLE
 	SONG_ARTIST
 	SONG_YEAR
@@ -15,24 +17,34 @@ enum SongFileItem {
 onready var song_selection_scene = preload("res://SongSelection.tscn")
 
 var SONGS_DIRECTORY = "res://songs/"
+var SAVE_FILE_NAME = "user://save_file.save"
 
 var SONG_SELECTION_HEIGHT = 90
+var SONG_SELECTION_OFFSET = 30
 var SONGS_PER_SCREEN = 5
 
+var NORMAL_ROTATION = 180
+var ADVANCED_ROTATION = 0
+
 var current_selection
+var current_mode = "normal"
 var song_files
 var song_selections = []
+var records
 
 var current_height = 0
 
 
 func _ready():
-	pass
+	left()
 
 
-func get_selected_ogg_and_midi():
+func get_stage_data():
 	var selection = song_files[current_selection]
-	return [selection[SongFileItem.OGG_FILE], selection[SongFileItem.MIDI_FILE]]
+	if current_mode == "normal":
+		return [selection[SongFileItem.OGG_FILE], selection[SongFileItem.NORMAL_MIDI_FILE], selection[SongFileItem.SONG_FILE], current_mode]
+	else:
+		return [selection[SongFileItem.OGG_FILE], selection[SongFileItem.ADVANCED_MIDI_FILE], selection[SongFileItem.SONG_FILE], current_mode]
 
 
 func reset():
@@ -43,11 +55,35 @@ func reset():
 		remove_child(song_selection)
 	song_selections = []
 
+	var save_file = File.new()
+	save_file.open(SAVE_FILE_NAME, File.READ)
+	var save_object = save_file.get_var()
+	records = save_object.get("records")
+	if not records:
+		records = []
+	save_file.close()
+
 	for song_file in song_files:
 		create_song_selection(song_file)
 
-	$Arrow.position.x = -50
-	$Arrow.position.y = SONG_SELECTION_HEIGHT/2
+	$SongArrow.position.x = -50
+	$SongArrow.position.y = SONG_SELECTION_OFFSET + SONG_SELECTION_HEIGHT/2
+
+
+
+func left():
+	current_mode = "normal"
+	$ModeArrow.rotation_degrees = NORMAL_ROTATION
+	for selection in song_selections:
+		selection.set_mode("normal")
+
+
+
+func right():
+	current_mode = "advanced"
+	$ModeArrow.rotation_degrees = ADVANCED_ROTATION
+	for selection in song_selections:
+		selection.set_mode("advanced")
 
 
 func up():
@@ -59,7 +95,7 @@ func up():
 			for song_selection in song_selections:
 				song_selection.position.y += SONG_SELECTION_HEIGHT
 		else:
-			$Arrow.position.y -= SONG_SELECTION_HEIGHT
+			$SongArrow.position.y -= SONG_SELECTION_HEIGHT
 
 
 func down():
@@ -71,7 +107,7 @@ func down():
 			for song_selection in song_selections:
 				song_selection.position.y -= SONG_SELECTION_HEIGHT
 		else:
-			$Arrow.position.y += SONG_SELECTION_HEIGHT
+			$SongArrow.position.y += SONG_SELECTION_HEIGHT
 
 
 func parse_song_files():
@@ -92,9 +128,14 @@ func parse_song_files():
 	for song_file_name in file_names:
 		var file = File.new()
 		file.open(SONGS_DIRECTORY + song_file_name, File.READ)
+		var version = file.get_line()
+		if version != "1":
+			print("Incompatible  song file version %s!" % version)
 		var song_file = {}
+		song_file[SongFileItem.SONG_FILE] = song_file_name
 		song_file[SongFileItem.OGG_FILE] = SONGS_DIRECTORY + file.get_line()
-		song_file[SongFileItem.MIDI_FILE] = SONGS_DIRECTORY + file.get_line()
+		song_file[SongFileItem.NORMAL_MIDI_FILE] = SONGS_DIRECTORY + file.get_line()
+		song_file[SongFileItem.ADVANCED_MIDI_FILE] = SONGS_DIRECTORY + file.get_line()
 		song_file[SongFileItem.SONG_TITLE] = file.get_line()
 		song_file[SongFileItem.SONG_ARTIST] = file.get_line()
 		song_file[SongFileItem.SONG_YEAR] = file.get_line()
@@ -111,5 +152,23 @@ func create_song_selection(song_file):
 	song_selection.set_year(song_file[SongFileItem.SONG_YEAR])
 	song_selection.set_author(song_file[SongFileItem.TRACK_AUTHOR])
 	song_selection.set_duration(song_file[SongFileItem.DURATION])
-	song_selection.position.y = song_selections.size() * SONG_SELECTION_HEIGHT
+	song_selection.position.y = song_selections.size() * SONG_SELECTION_HEIGHT + SONG_SELECTION_OFFSET
+
+	song_selection.set_score_normal("")
+	song_selection.set_percent_normal("")
+	song_selection.set_streak_normal("")
+	song_selection.set_score_advanced("")
+	song_selection.set_percent_advanced("")
+	song_selection.set_streak_advanced("")
+	for record in records:
+		if record["song_file_name"] == song_file[SongFileItem.SONG_FILE]: 
+			if record["mode"] == "normal":
+				song_selection.set_score_normal("Best " + str(record["score"]))
+				song_selection.set_percent_normal(record["percent"])
+				song_selection.set_streak_normal("Streak " + str(record["streak"]))
+			elif record["mode"] == "advanced":
+				song_selection.set_score_advanced("Best " + str(record["score"]))
+				song_selection.set_percent_advanced(record["percent"])
+				song_selection.set_streak_advanced("Streak " + str(record["streak"]))
+
 	song_selections.append(song_selection)

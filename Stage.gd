@@ -2,17 +2,22 @@ extends Node2D
 
 signal mode_stage
 signal mode_menu
+signal mode_results
 
 onready var gem_scene = preload("res://Gem.tscn")
 onready var GemSprite = preload("res://GemSprite.gd")
 
 var SCREEN_WIDTH = ProjectSettings.get_setting("display/window/size/width")
 var SCREEN_HEIGHT = ProjectSettings.get_setting("display/window/size/height")
+var STAGE_LEFT = 150
+var STAGE_WIDTH = 350
+var STAGE_CENTER = STAGE_LEFT + STAGE_WIDTH/2
 
 var LANE_SIZE = 40
-var FIRST_LANE = 160 + 20
-var LANE_GAP = 40
-var LANE_COUNT = 7
+var FIRST_LANE = STAGE_LEFT + 10 + LANE_SIZE/2
+var LANE_GAP = 10
+var LANE_COUNT = 10
+var GEM_LANES = 8
 
 var GEM_SPEED = 200
 var GREEN_LEEWAY_SECS = 0.1
@@ -26,6 +31,8 @@ var YELLOW_POINTS = 50
 var GREEN_HOLD_POINTS = 10
 var YELLOW_HOLD_POINTS = 5
 
+var song_file_name = ""
+var song_mode
 var gem_list = []
 var gem_starts = []
 var held_gems = []
@@ -54,19 +61,22 @@ func init(song_data):
 		lane_input_rising.append(false)
 		lane_input_held.append(false)
 		lane_input_pressed.append(false)
-		if i < 12:
-			var input_sprite = get_node("lane_input_" + str(i%6))
+		if i < GEM_LANES*2:
+			var input_sprite = get_node("lane_input_" + str(i%GEM_LANES))
 			input_sprite.position.x = get_lane_x(i)
-	$bar.position = Vector2(SCREEN_WIDTH/2, EVALUATE_HEIGHT)
-	$lane_input_6.position = Vector2(get_lane_x(12), EVALUATE_HEIGHT)
+	$bar.position = Vector2(STAGE_CENTER, EVALUATE_HEIGHT)
+	$lane_input_8.position = Vector2(get_lane_x(16), EVALUATE_HEIGHT)
+	$lane_input_9.position = Vector2(get_lane_x(18), EVALUATE_HEIGHT)
 	$MIDIParser.parse_file(song_data[1])
 	gem_starts = $MIDIParser.note_starts
 	$MusicPlayer.set_song(song_data[0])
+	song_file_name = song_data[2]
+	song_mode = song_data[3]
 
 
 func _process(delta):
 	if $MusicPlayer.completed:
-		emit_signal("mode_menu")
+		emit_signal("mode_results", [score, gem_count, green_count, yellow_count, red_count, best_streak, song_file_name, song_mode])
 	elapsed = $MusicPlayer.get_position()
 	spawn_gems()
 	advance_gems()
@@ -91,16 +101,20 @@ func spawn_gem(lane_number, hit_time, hold_end):
 	var gem = gem_scene.instance()
 	add_child(gem)
 	gem.position = Vector2(get_lane_x(lane_number), -gem.gem_size().y/2)
-	if lane_number < 12:
-		gem.lane_number = lane_number%6
-		gem.z_index = 2
-		if lane_number >= 6:
+	if lane_number < GEM_LANES * 2:
+		gem.lane_number = lane_number%GEM_LANES
+		gem.z_index = 4
+		if lane_number >= GEM_LANES:
 			gem.set_hold((hold_end - hit_time) * GEM_SPEED)
+		if gem.lane_number > 3:
+			gem.set_off_id(gem.lane_number - 4)
+		else:
+			gem.set_off_id(3 - gem.lane_number)
 	else:
-		gem.lane_number = 6
+		gem.lane_number = lane_number/2
 		gem.set_type(GemSprite.Type.BAR)
-		gem.z_index = 1
-		if lane_number == 13:
+		gem.z_index = 3
+		if lane_number % 2 == 1:
 			gem.set_hold((hold_end - hit_time) * GEM_SPEED)
 	gem.hit_time = hit_time
 	gem_list.append(gem)
@@ -108,13 +122,15 @@ func spawn_gem(lane_number, hit_time, hold_end):
 
 
 func get_lane_x(lane_number):
-	if lane_number < 12:
-		var x_pos = lane_number%6 * LANE_SIZE + FIRST_LANE
-		if lane_number%6 >= LANE_COUNT/2:
+	if lane_number < 16:
+		var x_pos = lane_number%GEM_LANES * LANE_SIZE + FIRST_LANE
+		if lane_number%GEM_LANES >= GEM_LANES/2:
 			x_pos += LANE_GAP
 		return x_pos
+	elif lane_number < 18:
+		return STAGE_LEFT + (STAGE_CENTER - STAGE_LEFT) / 2
 	else:
-		return SCREEN_WIDTH/2
+		return STAGE_CENTER + (STAGE_CENTER - STAGE_LEFT) / 2
 
 
 func advance_gems():

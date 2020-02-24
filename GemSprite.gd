@@ -20,11 +20,15 @@ var is_evaluated
 var lane_number
 var hit_time
 var note_length
+var off_id
 
 var current_state
 var current_sprite
 var current_middle
 var current_tail
+var current_off_sprite
+var current_off_middle
+var current_off_tail
 var is_pressed
 var pressed_time
 var hold_complete
@@ -33,9 +37,12 @@ var hold_progress_time
 func _ready():
 	is_evaluated = false
 	current_state = State.OFF
-	current_sprite = $OffGem
-	current_middle = $OffMiddle
-	current_tail = $OffTail
+	current_off_sprite = $OffGem0
+	current_off_middle = $OffMiddle0
+	current_off_tail = $OffTail0
+	current_sprite = current_off_sprite
+	current_middle = current_off_middle
+	current_tail = current_off_tail
 	current_type = Type.GEM
 	is_pressed = false
 	pressed_time = 0
@@ -43,6 +50,7 @@ func _ready():
 	note_length = 0
 	hold_complete = false
 	hold_progress_time = 0
+	off_id = 0
 
 
 func _process(delta):
@@ -77,23 +85,53 @@ func set_type(type):
 		Type.BAR:
 			current_sprite = $BarOffGem
 			current_sprite.visible = true
+			current_off_middle = $OffMiddleBar
+			current_off_tail = $OffTailBar
+			current_middle = current_off_middle
+			current_tail = current_off_tail
 
 
 func set_hold(length):
 	is_hold = true
 	note_length = length
-	$OffTail.position.y = -length
-	$OffMiddle.position.y = -length/2
-	$OffMiddle.scale.y = length/30
-	$OffTail.visible = true
-	$OffMiddle.visible = true
+	current_off_tail.position.y = -length
+	current_off_middle.position.y = -length/2
+	current_off_middle.scale.y = length/32
+	current_off_tail.visible = true
+	current_off_middle.visible = true
+
+
+func set_off_id(_off_id):
+	off_id = _off_id
+	current_off_sprite.visible = false
+	current_off_middle.visible = false
+	current_off_tail.visible = false
+
+	var next_off_sprite = get_node("OffGem" + str(off_id))
+	var next_off_middle = get_node("OffMiddle" + str(off_id))
+	var next_off_tail = get_node("OffTail" + str(off_id))
+	next_off_tail.position = current_off_tail.position
+	next_off_tail.scale = current_off_tail.scale
+	next_off_middle.position = current_off_middle.position
+	next_off_middle.scale = current_off_middle.scale
+	current_off_sprite = next_off_sprite
+	current_off_middle = next_off_middle
+	current_off_tail = next_off_tail
+	if current_state == State.OFF:
+		current_sprite = current_off_sprite
+		current_middle = current_off_middle
+		current_tail = current_off_tail
+
+	current_off_sprite.visible = true
+	current_off_middle.visible = true
+	current_off_tail.visible = true
 
 
 func update_tail(progress):
 	if current_state != State.OFF and current_state != State.RED and progress > 0:
 		if progress > note_length:
-			$OffMiddle.visible = false
-			$OffTail.visible = false
+			current_off_middle.visible = false
+			current_off_tail.visible = false
 			current_middle.visible = true
 			current_tail.visible = true
 
@@ -102,14 +140,14 @@ func update_tail(progress):
 			current_middle.scale.y = note_length/30
 			hold_complete = true
 		else:
-			$OffMiddle.visible = true
-			$OffTail.visible = true
+			current_off_middle.visible = true
+			current_off_tail.visible = true
 			current_middle.visible = true
 			current_tail.visible = false
 
-			$OffTail.position.y = -note_length
-			$OffMiddle.position.y = -note_length + (note_length-progress)/2
-			$OffMiddle.scale.y = (note_length-progress)/30
+			current_off_tail.position.y = -note_length
+			current_off_middle.position.y = -note_length + (note_length-progress)/2
+			current_off_middle.scale.y = (note_length-progress)/32
 			current_middle.position.y = -progress/2
 			current_middle.scale.y = progress/30
 
@@ -153,7 +191,7 @@ func set_state(state):
 		State.OFF:
 			match current_type:
 				Type.GEM:
-					current_sprite = $OffGem
+					current_sprite = current_off_sprite
 				Type.BAR:
 					current_sprite = $BarOffGem
 			is_evaluated = false

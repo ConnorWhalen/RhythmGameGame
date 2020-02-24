@@ -20,8 +20,19 @@ var META_TIME_SIG_EVENT = 0x58
 var TICKS_PER_SECOND = 0
 var TICKS_PER_BEAT = 1
 
-var NOTE_LANE_MAP = {52: 0, 50: 1, 48: 2, 40: 3, 38: 4, 36: 5, 53: 6, 51: 7, 49: 8, 41: 9, 39: 10, 37: 11, 35: 12, 34: 13}
-var HOLD_NOTES = [53, 51, 49, 41, 39, 37, 34]
+var NOTE_LANE_MAP = {
+	36: 0, 38: 1,
+	41: 2, 43: 3,
+	48: 4, 50: 5,
+	53: 6, 55: 7,
+	37: 8, 39: 9,
+	42: 10, 44: 11,
+	49: 12, 51: 13,
+	54: 14, 56: 15,
+	35: 16, 34: 17,
+	47: 18, 46: 19,
+}
+var HOLD_NOTES = [37, 39, 42, 44, 49, 51, 54, 56, 34, 46]
 
 
 var note_starts = []
@@ -87,7 +98,7 @@ func parse_file(filename):
 	var event_channel
 	var event_param_1
 	var current_beat = 0.0
-	var hold_note_starts = {53: 0, 51: 0, 49: 0, 41: 0, 39: 0, 37: 0, 34: 0}
+	var hold_note_starts = {37: 0, 39: 0, 42: 0, 44: 0, 49: 0, 51: 0, 54: 0, 56: 0, 34: 0, 46: 0}
 	while file.get_position() < file.get_len():
 		var event_delta_time = float(parse_variable_length(file))
 		match time_division_mode:

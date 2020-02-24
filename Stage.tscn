@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Stage.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Fullscreens-3.png.png" type="Texture" id=2]
@@ -10,9 +10,19 @@
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
 atlas = ExtResource( 3 )
-region = Rect2( 0, 0, 300, 50 )
+region = Rect2( 0, 0, 350, 50 )
 
 [sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 0, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 0, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=5]
 flags = 4
 atlas = ExtResource( 4 )
 region = Rect2( 0, 32, 32, 32 )
@@ -20,7 +30,12 @@ region = Rect2( 0, 32, 32, 32 )
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 3 )
-region = Rect2( 0, 350, 300, 50 )
+region = Rect2( 0, 400, 350, 50 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 400, 350, 50 )
 
 [node name="Stage" type="Node2D"]
 script = ExtResource( 1 )
@@ -33,43 +48,68 @@ position = Vector2( 300, 256 )
 texture = ExtResource( 2 )
 
 [node name="bar" type="Sprite" parent="."]
-position = Vector2( 150, 420 )
+position = Vector2( 325, 420 )
 texture = SubResource( 1 )
 
 [node name="lane_input_0" type="Sprite" parent="."]
 visible = false
 position = Vector2( 0, 420 )
+z_index = 2
 texture = SubResource( 2 )
 
 [node name="lane_input_1" type="Sprite" parent="."]
 visible = false
 position = Vector2( 0, 420 )
+z_index = 2
 texture = SubResource( 2 )
 
 [node name="lane_input_2" type="Sprite" parent="."]
 visible = false
 position = Vector2( 0, 420 )
+z_index = 2
 texture = SubResource( 2 )
 
 [node name="lane_input_3" type="Sprite" parent="."]
 visible = false
 position = Vector2( 0, 420 )
+z_index = 2
 texture = SubResource( 2 )
 
 [node name="lane_input_4" type="Sprite" parent="."]
 visible = false
 position = Vector2( 0, 420 )
+z_index = 2
 texture = SubResource( 2 )
 
 [node name="lane_input_5" type="Sprite" parent="."]
 visible = false
 position = Vector2( 0, 420 )
+z_index = 2
 texture = SubResource( 2 )
 
 [node name="lane_input_6" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, 420 )
+z_index = 2
+texture = SubResource( 4 )
+
+[node name="lane_input_7" type="Sprite" parent="."]
+visible = false
+position = Vector2( 0, 420 )
+z_index = 2
+texture = SubResource( 5 )
+
+[node name="lane_input_8" type="Sprite" parent="."]
+visible = false
 position = Vector2( 150, 420 )
+z_index = 1
 texture = SubResource( 3 )
+
+[node name="lane_input_9" type="Sprite" parent="."]
+visible = false
+position = Vector2( 0, 420 )
+z_index = 1
+texture = SubResource( 6 )
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 editor/display_folded = true

@@ -42,3 +42,51 @@ margin_right = 299.62
 margin_bottom = 91.4922
 text = "3:15"
 scroll_active = false
+
+[node name="ScoreNormal" type="RichTextLabel" parent="."]
+margin_left = 171.3
+margin_top = 32.2999
+margin_right = 287.3
+margin_bottom = 56.2999
+text = "Best 100000000"
+scroll_active = false
+
+[node name="ScoreAdvanced" type="RichTextLabel" parent="."]
+margin_left = 171.3
+margin_top = 32.2999
+margin_right = 287.3
+margin_bottom = 56.2999
+text = "Best 100000000"
+scroll_active = false
+
+[node name="PercentNormal" type="RichTextLabel" parent="."]
+margin_left = 204.044
+margin_top = 44.8296
+margin_right = 266.044
+margin_bottom = 60.8296
+text = "100.0%"
+scroll_active = false
+
+[node name="PercentAdvanced" type="RichTextLabel" parent="."]
+margin_left = 204.044
+margin_top = 44.8296
+margin_right = 266.044
+margin_bottom = 60.8296
+text = "100.0%"
+scroll_active = false
+
+[node name="StreakNormal" type="RichTextLabel" parent="."]
+margin_left = 161.177
+margin_top = 57.7594
+margin_right = 272.177
+margin_bottom = 76.7594
+text = "Streak 1000000"
+scroll_active = false
+
+[node name="StreakAdvanced" type="RichTextLabel" parent="."]
+margin_left = 161.177
+margin_top = 57.7594
+margin_right = 272.177
+margin_bottom = 76.7594
+text = "Streak 1000000"
+scroll_active = false
