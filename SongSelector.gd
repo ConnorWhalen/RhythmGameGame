@@ -110,6 +110,20 @@ func down():
 			$SongArrow.position.y += SONG_SELECTION_HEIGHT
 
 
+func search_dir(dir_name):
+	var file_names = []
+	var dir = Directory.new()
+	dir.open(SONGS_DIRECTORY + dir_name)
+	dir.list_dir_begin()
+
+	var file_name = dir.get_next()
+	while file_name != "":
+		if not dir.current_is_dir() and file_name.ends_with(".song"):
+			file_names.append(file_name)
+		file_name = dir.get_next()
+	return file_names
+
+
 func parse_song_files():
 	song_files = []
 	var file_names = []
@@ -119,23 +133,40 @@ func parse_song_files():
 
 	var file_name = dir.get_next()
 	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(".song"):
-			file_names.append(file_name)
+		if not dir.current_is_dir():
+			if file_name.ends_with(".song"):
+				file_names.append(["", file_name])
+		else:
+			var dir_files = search_dir(file_name)
+			for dir_file in dir_files:
+				file_names.append([file_name, dir_file])
 		file_name = dir.get_next()
 
 	dir.list_dir_end()
 
-	for song_file_name in file_names:
-		var file = File.new()
-		file.open(SONGS_DIRECTORY + song_file_name, File.READ)
-		var version = file.get_line()
+	var song_file_name
+	var song_file_dir
+	var song_file_path
+
+	var file
+	var version
+	var song_file
+	for file_name_entry in file_names:
+		song_file_dir = file_name_entry[0]
+		song_file_name = file_name_entry[1]
+		song_file_path = song_file_name
+		if song_file_dir != "":
+			song_file_path = song_file_dir + "/" + song_file_name
+		file = File.new()
+		file.open(SONGS_DIRECTORY + song_file_path, File.READ)
+		version = file.get_line()
 		if version != "1":
 			print("Incompatible  song file version %s!" % version)
-		var song_file = {}
+		song_file = {}
 		song_file[SongFileItem.SONG_FILE] = song_file_name
-		song_file[SongFileItem.OGG_FILE] = SONGS_DIRECTORY + file.get_line()
-		song_file[SongFileItem.NORMAL_MIDI_FILE] = SONGS_DIRECTORY + file.get_line()
-		song_file[SongFileItem.ADVANCED_MIDI_FILE] = SONGS_DIRECTORY + file.get_line()
+		song_file[SongFileItem.OGG_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
+		song_file[SongFileItem.NORMAL_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
+		song_file[SongFileItem.ADVANCED_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
 		song_file[SongFileItem.SONG_TITLE] = file.get_line()
 		song_file[SongFileItem.SONG_ARTIST] = file.get_line()
 		song_file[SongFileItem.SONG_YEAR] = file.get_line()
@@ -150,7 +181,7 @@ func create_song_selection(song_file):
 	song_selection.set_title(song_file[SongFileItem.SONG_TITLE])
 	song_selection.set_artist(song_file[SongFileItem.SONG_ARTIST])
 	song_selection.set_year(song_file[SongFileItem.SONG_YEAR])
-	song_selection.set_author(song_file[SongFileItem.TRACK_AUTHOR])
+	song_selection.set_author("Chart by " + song_file[SongFileItem.TRACK_AUTHOR])
 	song_selection.set_duration(song_file[SongFileItem.DURATION])
 	song_selection.position.y = song_selections.size() * SONG_SELECTION_HEIGHT + SONG_SELECTION_OFFSET
 

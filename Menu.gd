@@ -82,6 +82,7 @@ func set_state(state):
 		State.ENTER:
 			$PressEnterText.visible = false
 			$TitleBG.visible = false
+			$VersionText.visible = false
 		State.MAIN_MENU:
 			$PlaySongText.visible = false
 			$SettingsText.visible = false
@@ -104,6 +105,7 @@ func set_state(state):
 		State.ENTER:
 			$PressEnterText.visible = true
 			$TitleBG.visible = true
+			$VersionText.visible = true
 		State.MAIN_MENU:
 			$PlaySongText.visible = true
 			$SettingsText.visible = true
