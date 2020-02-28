@@ -129,7 +129,7 @@ script = ExtResource( 6 )
 [node name="ScoreDisplay" type="RichTextLabel" parent="."]
 margin_left = 65.0
 margin_top = 10.0
-margin_right = 150.0
+margin_right = 149.0
 margin_bottom = 25.0
 text = "0"
 scroll_active = false
@@ -143,9 +143,9 @@ text = "SCORE:"
 scroll_active = false
 
 [node name="StreakDisplay" type="RichTextLabel" parent="."]
-margin_left = 65.0
+margin_left = 64.0
 margin_top = 30.0
-margin_right = 150.0
+margin_right = 148.0
 margin_bottom = 45.0
 text = "0"
 scroll_active = false

@@ -32,6 +32,7 @@ var GREEN_HOLD_POINTS = 10
 var YELLOW_HOLD_POINTS = 5
 
 var song_file_name = ""
+var ogg_file_name = ""
 var song_mode
 var gem_list = []
 var gem_starts = []
@@ -72,6 +73,7 @@ func init(song_data):
 	$MusicPlayer.set_song(song_data[0])
 	song_file_name = song_data[2]
 	song_mode = song_data[3]
+	ogg_file_name = song_data[0]
 
 
 func _process(delta):

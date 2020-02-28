@@ -28,9 +28,14 @@ func get_position():
 
 
 func set_song(filename):
-	var vstream = load(filename)
-	vstream.loop = false
-	set_stream(vstream)
+	# https://github.com/godotengine/godot/issues/17748
+	var ogg_file = File.new()
+	ogg_file.open(filename, File.READ)
+	var bytes = ogg_file.get_buffer(ogg_file.get_len())
+	var ogg_stream = AudioStreamOGGVorbis.new()
+	ogg_stream.data = bytes
+	stream = ogg_stream
+	ogg_file.close()
 
 
 func _on_start_timer_timeout():

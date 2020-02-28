@@ -16,8 +16,8 @@ enum SongFileItem {
 
 onready var song_selection_scene = preload("res://SongSelection.tscn")
 
-var SONGS_DIRECTORY = "res://songs/"
-var SAVE_FILE_NAME = "user://save_file.save"
+var SONGS_DIRECTORY = "songs/"
+var SAVE_FILE_NAME = "user://save_file_2.save"
 
 var SONG_SELECTION_HEIGHT = 90
 var SONG_SELECTION_OFFSET = 30
@@ -58,7 +58,8 @@ func reset():
 	var save_file = File.new()
 	save_file.open(SAVE_FILE_NAME, File.READ)
 	var save_object = save_file.get_var()
-	records = save_object.get("records")
+	if save_object:
+		records = save_object.get("records")
 	if not records:
 		records = []
 	save_file.close()

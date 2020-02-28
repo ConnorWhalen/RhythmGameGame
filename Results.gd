@@ -4,7 +4,7 @@ signal mode_stage
 signal mode_menu
 signal mode_results
 
-var SAVE_FILE_NAME = "user://save_file.save"
+var SAVE_FILE_NAME = "user://save_file_2.save"
 
 var score
 var gem_count
@@ -44,7 +44,9 @@ func init(results_data):
 	var save_file = File.new()
 	save_file.open(SAVE_FILE_NAME, File.READ)
 	var save_object = save_file.get_var()
-	var records = save_object.get("records")
+	var records = null
+	if save_object:
+	    records = save_object.get("records")
 	var record_found = false
 	var percent = make_single_decimal((float(green_count) + 0.5 * float(yellow_count))/ float(gem_count))
 	if not records:
