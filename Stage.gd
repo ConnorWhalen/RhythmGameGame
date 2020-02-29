@@ -19,7 +19,6 @@ var LANE_GAP = 10
 var LANE_COUNT = 10
 var GEM_LANES = 8
 
-var GEM_SPEED = 300
 var GREEN_LEEWAY_SECS = 0.1
 var YELLOW_LEEWAY_SECS = 0.2
 var HOLD_PROGRESS_PERIOD = 0.1
@@ -36,6 +35,7 @@ var ogg_file_name = ""
 var song_mode
 var gem_list = []
 var gem_starts = []
+var gem_speed = 300
 var held_gems = []
 var elapsed
 var lane_input_rising
@@ -73,6 +73,15 @@ func init(song_data):
 	$MusicPlayer.set_song(song_data[0])
 	song_file_name = song_data[2]
 	song_mode = song_data[3]
+	match song_mode:
+		"easy":
+			gem_speed = 250
+		"medium":
+			gem_speed = 300
+		"expert":
+			gem_speed = 350
+		"expertplus":
+			gem_speed = 350
 	ogg_file_name = song_data[0]
 
 
@@ -94,7 +103,7 @@ func spawn_gems():
 	for i in range(gem_starts.size()-1, -1, -1):
 		hit_time = $MIDIParser.beats_to_secs(gem_starts[i][1])
 		hold_end = $MIDIParser.beats_to_secs(gem_starts[i][2])
-		if (elapsed - hit_time) * GEM_SPEED + EVALUATE_HEIGHT > -32:
+		if (elapsed - hit_time) * gem_speed + EVALUATE_HEIGHT > -32:
 			spawn_gem(gem_starts[i][0], hit_time, hold_end)
 			gem_starts.remove(i)
 
@@ -107,17 +116,17 @@ func spawn_gem(lane_number, hit_time, hold_end):
 		gem.lane_number = lane_number%GEM_LANES
 		gem.z_index = 4
 		if lane_number >= GEM_LANES:
-			gem.set_hold((hold_end - hit_time) * GEM_SPEED)
+			gem.set_hold((hold_end - hit_time) * gem_speed)
 		if gem.lane_number > 3:
 			gem.set_off_id(gem.lane_number - 4)
 		else:
-			gem.set_off_id(3 - gem.lane_number)
+			gem.set_off_id(gem.lane_number)
 	else:
 		gem.lane_number = lane_number/2
 		gem.set_type(GemSprite.Type.BAR)
 		gem.z_index = 3
 		if lane_number % 2 == 1:
-			gem.set_hold((hold_end - hit_time) * GEM_SPEED)
+			gem.set_hold((hold_end - hit_time) * gem_speed)
 	gem.hit_time = hit_time
 	gem_list.append(gem)
 	gem_count += 1
@@ -139,7 +148,7 @@ func advance_gems():
 	var gem
 	for i in range(gem_list.size()):
 		gem = gem_list[i]
-		gem.position.y = (elapsed - gem.hit_time) * GEM_SPEED + EVALUATE_HEIGHT
+		gem.position.y = (elapsed - gem.hit_time) * gem_speed + EVALUATE_HEIGHT
 
 
 func update_inputs():

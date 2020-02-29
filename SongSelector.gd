@@ -4,13 +4,22 @@ extends Node2D
 enum SongFileItem {
 	SONG_FILE
 	OGG_FILE
-	NORMAL_MIDI_FILE
-	ADVANCED_MIDI_FILE
+	EASY_MIDI_FILE
+	MEDIUM_MIDI_FILE
+	EXPERT_MIDI_FILE
+	EXPERTPLUS_MIDI_FILE
 	SONG_TITLE
 	SONG_ARTIST
 	SONG_YEAR
 	TRACK_AUTHOR
 	DURATION
+}
+
+enum Mode {
+	EASY
+	MEDIUM
+	EXPERT
+	EXPERT_PLUS
 }
 
 
@@ -23,11 +32,10 @@ var SONG_SELECTION_HEIGHT = 90
 var SONG_SELECTION_OFFSET = 30
 var SONGS_PER_SCREEN = 5
 
-var NORMAL_ROTATION = 180
-var ADVANCED_ROTATION = 0
+var MODE_ARROW_GAP = 35
 
 var current_selection
-var current_mode = "normal"
+var current_mode = Mode.EASY
 var song_files
 var song_selections = []
 var records
@@ -41,10 +49,17 @@ func _ready():
 
 func get_stage_data():
 	var selection = song_files[current_selection]
-	if current_mode == "normal":
-		return [selection[SongFileItem.OGG_FILE], selection[SongFileItem.NORMAL_MIDI_FILE], selection[SongFileItem.SONG_FILE], current_mode]
-	else:
-		return [selection[SongFileItem.OGG_FILE], selection[SongFileItem.ADVANCED_MIDI_FILE], selection[SongFileItem.SONG_FILE], current_mode]
+	var midi_file
+	match current_mode:
+		Mode.EASY:
+			midi_file = selection[SongFileItem.EASY_MIDI_FILE]
+		Mode.MEDIUM:
+			midi_file = selection[SongFileItem.MEDIUM_MIDI_FILE]
+		Mode.EXPERT:
+			midi_file = selection[SongFileItem.EXPERT_MIDI_FILE]
+		Mode.EXPERT_PLUS:
+			midi_file = selection[SongFileItem.EXPERTPLUS_MIDI_FILE]
+	return [selection[SongFileItem.OGG_FILE], midi_file, selection[SongFileItem.SONG_FILE], mode_to_string(current_mode)]
 
 
 func reset():
@@ -73,18 +88,17 @@ func reset():
 
 
 func left():
-	current_mode = "normal"
-	$ModeArrow.rotation_degrees = NORMAL_ROTATION
-	for selection in song_selections:
-		selection.set_mode("normal")
-
+	if current_mode > Mode.EASY:
+		current_mode -= 1
+		set_mode()
+		$ModeArrow.position.y -= MODE_ARROW_GAP
 
 
 func right():
-	current_mode = "advanced"
-	$ModeArrow.rotation_degrees = ADVANCED_ROTATION
-	for selection in song_selections:
-		selection.set_mode("advanced")
+	if current_mode < Mode.EXPERT_PLUS:
+		current_mode += 1
+		set_mode()
+		$ModeArrow.position.y += MODE_ARROW_GAP
 
 
 func up():
@@ -109,6 +123,24 @@ func down():
 				song_selection.position.y -= SONG_SELECTION_HEIGHT
 		else:
 			$SongArrow.position.y += SONG_SELECTION_HEIGHT
+
+
+func set_mode():
+	for selection in song_selections:
+		selection.set_mode(mode_to_string(current_mode))
+	$EasyBG.visible = false
+	$MediumBG.visible = false
+	$ExpertBG.visible = false
+	$ExpertPlusBG.visible = false
+	match current_mode:
+		Mode.EASY:
+			$EasyBG.visible = true
+		Mode.MEDIUM:
+			$MediumBG.visible = true
+		Mode.EXPERT:
+			$ExpertBG.visible = true
+		Mode.EXPERT_PLUS:
+			$ExpertPlusBG.visible = true
 
 
 func search_dir(dir_name):
@@ -137,7 +169,7 @@ func parse_song_files():
 		if not dir.current_is_dir():
 			if file_name.ends_with(".song"):
 				file_names.append(["", file_name])
-		else:
+		elif file_name != "..":
 			var dir_files = search_dir(file_name)
 			for dir_file in dir_files:
 				file_names.append([file_name, dir_file])
@@ -161,18 +193,33 @@ func parse_song_files():
 		file = File.new()
 		file.open(SONGS_DIRECTORY + song_file_path, File.READ)
 		version = file.get_line()
-		if version != "1":
-			print("Incompatible  song file version %s!" % version)
 		song_file = {}
-		song_file[SongFileItem.SONG_FILE] = song_file_name
-		song_file[SongFileItem.OGG_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
-		song_file[SongFileItem.NORMAL_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
-		song_file[SongFileItem.ADVANCED_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
-		song_file[SongFileItem.SONG_TITLE] = file.get_line()
-		song_file[SongFileItem.SONG_ARTIST] = file.get_line()
-		song_file[SongFileItem.SONG_YEAR] = file.get_line()
-		song_file[SongFileItem.TRACK_AUTHOR] = file.get_line()
-		song_file[SongFileItem.DURATION] = file.get_line()
+		if version != "2":
+			print("Incompatible  song file version %s!" % version)
+			song_file[SongFileItem.SONG_FILE] = song_file_name
+			song_file[SongFileItem.SONG_TITLE] = song_file_name
+			song_file[SongFileItem.SONG_ARTIST] = "Bad Version (%s)" % version
+
+			song_file[SongFileItem.OGG_FILE] = ""
+			song_file[SongFileItem.EASY_MIDI_FILE] = ""
+			song_file[SongFileItem.MEDIUM_MIDI_FILE] = ""
+			song_file[SongFileItem.EXPERT_MIDI_FILE] = ""
+			song_file[SongFileItem.EXPERTPLUS_MIDI_FILE] = ""
+			song_file[SongFileItem.SONG_YEAR] = ""
+			song_file[SongFileItem.TRACK_AUTHOR] = ""
+			song_file[SongFileItem.DURATION] = ""
+		else:
+			song_file[SongFileItem.SONG_FILE] = song_file_name
+			song_file[SongFileItem.OGG_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.EASY_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.MEDIUM_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.EXPERT_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.EXPERTPLUS_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.SONG_TITLE] = file.get_line()
+			song_file[SongFileItem.SONG_ARTIST] = file.get_line()
+			song_file[SongFileItem.SONG_YEAR] = file.get_line()
+			song_file[SongFileItem.TRACK_AUTHOR] = file.get_line()
+			song_file[SongFileItem.DURATION] = file.get_line()
 		song_files.append(song_file)
 
 
@@ -186,21 +233,31 @@ func create_song_selection(song_file):
 	song_selection.set_duration(song_file[SongFileItem.DURATION])
 	song_selection.position.y = song_selections.size() * SONG_SELECTION_HEIGHT + SONG_SELECTION_OFFSET
 
-	song_selection.set_score_normal("")
-	song_selection.set_percent_normal("")
-	song_selection.set_streak_normal("")
-	song_selection.set_score_advanced("")
-	song_selection.set_percent_advanced("")
-	song_selection.set_streak_advanced("")
+	song_selection.set_record_easy("", "", "")
+	song_selection.set_record_medium("", "", "")
+	song_selection.set_record_expert("", "", "")
+	song_selection.set_record_expertplus("", "", "")
 	for record in records:
 		if record["song_file_name"] == song_file[SongFileItem.SONG_FILE]: 
-			if record["mode"] == "normal":
-				song_selection.set_score_normal("Best " + str(record["score"]))
-				song_selection.set_percent_normal(record["percent"])
-				song_selection.set_streak_normal("Streak " + str(record["streak"]))
-			elif record["mode"] == "advanced":
-				song_selection.set_score_advanced("Best " + str(record["score"]))
-				song_selection.set_percent_advanced(record["percent"])
-				song_selection.set_streak_advanced("Streak " + str(record["streak"]))
+			if record["mode"] == "easy":
+				song_selection.set_record_easy("Best " + str(record["score"]), record["percent"], "Streak " + str(record["streak"]))
+			elif record["mode"] == "medium":
+				song_selection.set_record_medium("Best " + str(record["score"]), record["percent"], "Streak " + str(record["streak"]))
+			elif record["mode"] == "expert":
+				song_selection.set_record_expert("Best " + str(record["score"]), record["percent"], "Streak " + str(record["streak"]))
+			elif record["mode"] == "expertplus":
+				song_selection.set_record_expertplus("Best " + str(record["score"]), record["percent"], "Streak " + str(record["streak"]))
 
 	song_selections.append(song_selection)
+
+
+func mode_to_string(mode):
+	match mode:
+		Mode.EASY:
+			return "easy"
+		Mode.MEDIUM:
+			return "medium"
+		Mode.EXPERT:
+			return "expert"
+		Mode.EXPERT_PLUS:
+			return "expertplus"

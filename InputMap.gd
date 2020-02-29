@@ -13,7 +13,7 @@ func _ready():
 			if i > 3:
 				off_id = i - 4
 			else:
-				off_id = 3 - i
+				off_id = i
 			get_node("Lane" + str(i)).set_off_id(off_id)
 
 	get_node("Lane8").set_type("bar")

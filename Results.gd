@@ -30,8 +30,9 @@ func init(results_data):
 	song_file_name = results_data[6]
 	song_mode = results_data[7]
 
+	var total_percent = (float(green_count) + 0.5 * float(yellow_count))/ float(gem_count)
 	$ScoreText.text = str(score)
-	$PercentText.text = make_single_decimal((float(green_count) + 0.5 * float(yellow_count))/ float(gem_count))
+	$PercentText.text = make_single_decimal(total_percent)
 	$GreenText.text = "X " + str(green_count)
 	$YellowText.text = "X " + str(yellow_count)
 	$RedText.text = "X " + str(red_count)
@@ -40,6 +41,8 @@ func init(results_data):
 	$YellowPercentText.text = make_single_decimal(float(yellow_count) / float(gem_count))
 	$RedPercentText.text = make_single_decimal(float(red_count) / float(gem_count))
 	$StreakText.text = str(best_streak)
+	$RankF.visible = false
+	render_rank(total_percent * 100)
 
 	var save_file = File.new()
 	save_file.open(SAVE_FILE_NAME, File.READ)
@@ -55,9 +58,11 @@ func init(results_data):
 		records.append(new_record)
 	else:
 		for record in records:
+			if record["mode"] == "normal":
+				record["mode"] = "expert"
+			if record["mode"] == "advanced":
+				record["mode"] = "expertplus"
 			if record["song_file_name"] == song_file_name and record["mode"] == song_mode:
-				print(score)
-				print(record["score"])
 				if score > record["score"]:
 					record["score"] = score
 					record["streak"] = best_streak
@@ -72,6 +77,27 @@ func init(results_data):
 	save_file.store_var({"records": records})
 	save_file.close()
 
+
+func render_rank(percent):
+	$RankF.visible = false
+	if percent < 40:
+		$RankF.visible = true
+	elif percent < 50:
+		$RankE.visible = true
+	elif percent < 60:
+		$RankD.visible = true
+	elif percent < 70:
+		$RankC.visible = true
+	elif percent < 80:
+		$RankB.visible = true
+	elif percent < 90:
+		$RankA.visible = true
+	elif percent < 95:
+		$RankS.visible = true
+	elif percent < 97.5:
+		$RankSS.visible = true
+	else:
+		$RankSSS.visible = true
 
 
 func make_single_decimal(number):

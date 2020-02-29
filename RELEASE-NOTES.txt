@@ -1,0 +1,4 @@
+***** ***** Version 0.1.2 ***** *****
+- Add easy and medium difficulties. The former normal and advanced modes are now expert and expert+
+- bar/thumb notes can now be played with any key on the bottom row of the keyboard
+- Display a letter rank (A, B, C, S, etc.) on the results screen

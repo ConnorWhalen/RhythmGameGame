@@ -22,6 +22,8 @@ var current_selection
 var debounce = false
 var debounce_up = false
 var debounce_down = false
+var debounce_left = false
+var debounce_right = false
 
 
 func _ready():
@@ -35,6 +37,10 @@ func _process(delta):
 		debounce_up = false
 	if debounce_down and not Input.is_action_pressed("ui_down"):
 		debounce_down = false
+	if debounce_left and not Input.is_action_pressed("ui_left"):
+		debounce_left = false
+	if debounce_right and not Input.is_action_pressed("ui_right"):
+		debounce_right = false
 	match current_state:
 		State.ENTER:
 			if Input.is_action_pressed("ui_accept"):
@@ -68,10 +74,12 @@ func _process(delta):
 			if not debounce_down and Input.is_action_pressed("ui_down"):
 				$SongSelector.down()
 				debounce_down = true
-			if Input.is_action_pressed("ui_left"):
+			if not debounce_left and Input.is_action_pressed("ui_left"):
 				$SongSelector.left()
-			elif Input.is_action_pressed("ui_right"):
+				debounce_left = true
+			elif not debounce_right and Input.is_action_pressed("ui_right"):
 				$SongSelector.right()
+				debounce_right = true
 			if Input.is_action_pressed("ui_back"):
 				set_state(State.MAIN_MENU)
 
@@ -94,9 +102,7 @@ func set_state(state):
 			$SettingsControlsText.visible = false
 			$SettingsDescription.visible = false
 		State.SONG_MENU:
-			$ChooseSongBG.visible = false
 			$SongSelector.visible = false
-			$SongSelectControlsText.visible = false
 
 	current_state = state
 
@@ -119,7 +125,5 @@ func set_state(state):
 			$SettingsControlsText.visible = true
 			$SettingsDescription.visible = true
 		State.SONG_MENU:
-			$ChooseSongBG.visible = true
 			$SongSelector.visible = true
-			$SongSelectControlsText.visible = true
 			$SongSelector.reset()
