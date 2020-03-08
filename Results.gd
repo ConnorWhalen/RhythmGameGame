@@ -67,6 +67,7 @@ func init(results_data):
 					record["score"] = score
 					record["streak"] = best_streak
 					record["percent"] = percent
+					$NewRecordText.visible = true
 				record_found = true
 		if not record_found:
 			var new_record = {"song_file_name": song_file_name, "mode": song_mode, "score": score, "streak": best_streak, "percent": percent}

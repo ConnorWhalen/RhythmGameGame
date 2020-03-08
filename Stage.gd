@@ -30,6 +30,8 @@ var YELLOW_POINTS = 50
 var GREEN_HOLD_POINTS = 10
 var YELLOW_HOLD_POINTS = 5
 
+var PAUSE_ARROW_GAP = 40
+
 var song_file_name = ""
 var ogg_file_name = ""
 var song_mode
@@ -38,6 +40,9 @@ var gem_starts = []
 var gem_speed = 300
 var held_gems = []
 var elapsed
+var paused = false
+var pause_debounce = true
+var paused_resume_exitb = true
 var lane_input_rising
 var lane_input_held
 var lane_input_pressed
@@ -65,7 +70,7 @@ func init(song_data):
 		if i < GEM_LANES*2:
 			var input_sprite = get_node("lane_input_" + str(i%GEM_LANES))
 			input_sprite.position.x = get_lane_x(i)
-	$bar.position = Vector2(STAGE_CENTER, EVALUATE_HEIGHT)
+	$bar.position = Vector2(STAGE_CENTER+0.5, EVALUATE_HEIGHT)
 	$lane_input_8.position = Vector2(get_lane_x(16), EVALUATE_HEIGHT)
 	$lane_input_9.position = Vector2(get_lane_x(18), EVALUATE_HEIGHT)
 	$MIDIParser.parse_file(song_data[1])
@@ -88,13 +93,35 @@ func init(song_data):
 func _process(delta):
 	if $MusicPlayer.completed:
 		emit_signal("mode_results", [score, gem_count, green_count, yellow_count, red_count, best_streak, song_file_name, song_mode])
-	elapsed = $MusicPlayer.get_position()
-	spawn_gems()
-	advance_gems()
-	update_inputs()
-	check_gems()
-	$ScoreDisplay.text = str(score)
-	$StreakDisplay.text = str(current_streak)
+
+	var pressed = Input.is_action_pressed("ui_accept")
+	if pressed and not pause_debounce:
+		paused = not paused
+		$PauseSprites.visible = paused
+		$PauseArrow.visible = paused
+		if paused:
+			$MusicPlayer.pause()
+		elif paused_resume_exitb:
+			$MusicPlayer.resume()
+		else:
+			emit_signal("mode_menu")
+
+	if paused:
+		if Input.is_action_pressed("ui_up") and not paused_resume_exitb:
+			paused_resume_exitb = true
+			$PauseArrow.position.y -= PAUSE_ARROW_GAP
+		elif Input.is_action_pressed("ui_down") and paused_resume_exitb:
+			paused_resume_exitb = false
+			$PauseArrow.position.y += PAUSE_ARROW_GAP
+	else:
+		elapsed = $MusicPlayer.get_position()
+		spawn_gems()
+		advance_gems()
+		update_inputs()
+		check_gems()
+		$ScoreDisplay.text = str(score)
+		$StreakDisplay.text = str(current_streak)
+	pause_debounce = pressed
 
 
 func spawn_gems():
@@ -139,9 +166,9 @@ func get_lane_x(lane_number):
 			x_pos += LANE_GAP
 		return x_pos
 	elif lane_number < 18:
-		return STAGE_LEFT + (STAGE_CENTER - STAGE_LEFT) / 2
+		return STAGE_CENTER - ((STAGE_CENTER - STAGE_LEFT) / 2) + 2
 	else:
-		return STAGE_CENTER + (STAGE_CENTER - STAGE_LEFT) / 2
+		return STAGE_CENTER + ((STAGE_CENTER - STAGE_LEFT) / 2) - 1
 
 
 func advance_gems():

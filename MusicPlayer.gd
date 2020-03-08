@@ -1,11 +1,14 @@
 extends AudioStreamPlayer
 
-
+var start_timer_position
 var previous_playback_position
+var end_timer_position
 
 var started = false
 var finished = false
 var completed = false
+
+var paused = false
 
 
 func _ready():
@@ -13,9 +16,28 @@ func _ready():
 
 
 func _process(delta):
+	if $start_timer.is_stopped():
+		start_timer_position = $start_timer
 	if is_playing():
 		previous_playback_position = get_playback_position()
 
+
+func pause():
+	if not started:
+		$start_timer.set_paused(true)
+	elif not finished:
+		set_stream_paused(true)
+	else:
+		$end_timer.set_paused(true)
+
+
+func resume():
+	if not started:
+		$start_timer.set_paused(false)
+	elif not finished:
+		set_stream_paused(false)
+	else:
+		$end_timer.set_paused(false)
 
 
 func get_position():

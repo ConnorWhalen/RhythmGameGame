@@ -1,0 +1,105 @@
+Thanks for checking out Rock Rhythm!
+
+***** ***** INSTALLATION ***** *****
+
+MacOS:
+Download the dmg file and move the application to your Applications folder.
+
+Windows:
+download the exe and pck files and keep them in the same folder
+
+***** ***** ADDING SONGS ***** *****
+
+Be default the game will have no songs available.
+Download song packs and put them in the correct location for the game to find them.
+The game will search for a folder called "songs" and will look for song files in there and in any folders within.
+
+MacOS:
+place the "songs" folder in "Rock Rhythm.app/Contents/Resources"
+
+Windows:
+place the "songs" folder in the folder with your exe and pck files
+
+***** ***** WRITING YOUR OWN TRACKS ***** *****
+
+Tracks are made up of 6 files, a song file, 4 midi files, and an ogg file.
+
+Song File:
+The song file is a simple text file that contains everything the game needs to know about the track.
+
+FORMAT:
+- song file version (always 2)
+- OGG file name
+- MIDI file name for easy mode track
+- MIDI file name for medium mode track
+- MIDI file name for expert mode track
+- MIDI file name for expert+ mode track
+- Track Title
+- Artist Name
+- Song Release Year
+- Track Author (that's you!)
+- Track Length
+
+EXAMPLE:
+2
+Our-Weary-Roots.ogg
+roots gh easy.mid
+roots gh med.mid
+roots gh expert.mid
+roots gh expertplus.mid
+Our Weary Roots
+Dendron
+2016
+Connor
+3:40
+
+OGG File:
+OGG is an audio format similar to mp3. If you have an audio file of your song you should be able to convert it to OGG online if you google "convert xxx to ogg".
+
+MIDI File:
+See "Composing Tracks"
+
+***** ***** COMPOSING TRACKS ***** *****
+
+Here is a short guide on composing your own MIDI tracks.
+
+Each song has four midi tracks, one for each difficulty. The only rules around difficulty are:
+- Only expert and expert+ have bar/thumb notes
+- Easy, medium, and expert tracks can have no more than TWO keys held or pressed at the same time. Expert+ mode can have as many simultaneous keys as you want
+
+Both tracks can use the same MIDI file if there is no difference between the two difficulties.
+
+The note map from MIDI to the game is as follows:
+
+G#2 (56) - right pinky hold
+G2  (55) - right pinky
+F#2 (54) - right ring hold
+F2  (53) - right ring
+D#2 (51) - right middle hold
+D2  (50) - right middle
+C#2 (49) - right index hold
+C2  (48) - right index
+B1  (47) - right thumb
+Bb1 (46) - right thumb hold
+
+G#2 (44) - left index hold
+G2  (43) - left index
+F#2 (42) - left middle hold
+F2  (41) - left middle
+D#2 (39) - left ring hold
+D2  (38) - left ring
+C#2 (37) - left pinky hold
+C2  (36) - left pinky
+B1  (35) - left thumb
+Bb1 (34) - left thumb hold
+
+Note that each note has a hold and non-hold variant. The hold notes will last as long as the MIDI note. Try to leave a small space between the end of one hold note and the start on the next one.
+
+The game should be able to handle any tempo and time signatue changes in the MIDI file.
+
+The game is currently not able to handle MIDI files with any notes outside of the mapped notes. The game will freeze up if you try to play a MIDI file with a note out of place.
+
+***** ***** SOURCE CODE / CONTRIBUTING ***** *****
+
+Source code for the game can be found at:
+https://github.com/ConnorWhalen/RhythmGameGame

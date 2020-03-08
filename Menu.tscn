@@ -1,7 +1,7 @@
 [gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://Menu.gd" type="Script" id=1]
-[ext_resource path="res://sprites/Fullscreens-1.png.png" type="Texture" id=2]
+[ext_resource path="res://sprites/Fullscreens-10.png.png" type="Texture" id=2]
 [ext_resource path="res://sprites/Fullscreens-2.png.png" type="Texture" id=3]
 [ext_resource path="res://sprites/text.png" type="Texture" id=4]
 [ext_resource path="res://Arrow.gd" type="Script" id=5]
@@ -185,7 +185,7 @@ margin_left = 6.71002
 margin_top = 491.448
 margin_right = 97.71
 margin_bottom = 516.448
-text = "Version 0.1.2"
+text = "Version 0.2.0"
 scroll_active = false
 
 [node name="SongSelector" type="Node2D" parent="."]

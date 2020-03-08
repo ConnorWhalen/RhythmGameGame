@@ -2,3 +2,9 @@
 - Add easy and medium difficulties. The former normal and advanced modes are now expert and expert+
 - bar/thumb notes can now be played with any key on the bottom row of the keyboard
 - Display a letter rank (A, B, C, S, etc.) on the results screen
+
+***** ***** Version 0.2.0 ***** *****
+- Changed name to Rock Rhythm
+- Added a letter rank to the results screen
+- Added a "new record" popup to the results screen
+- Added pausing to the main game

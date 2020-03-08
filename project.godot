@@ -17,7 +17,7 @@ _global_script_class_icons={
 
 config/name="Rhythm Game Game"
 run/main_scene="res://Main.tscn"
-boot_splash/image="res://sprites/Fullscreens-1.png.png"
+boot_splash/image="res://sprites/Fullscreens-10.png.png"
 boot_splash/bg_color=Color( 0.137255, 0.137255, 0.137255, 0 )
 
 [display]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Stage.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Fullscreens-3.png.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://sprites/gems.png" type="Texture" id=4]
 [ext_resource path="res://MusicPlayer.gd" type="Script" id=5]
 [ext_resource path="res://MIDIParser.gd" type="Script" id=6]
+[ext_resource path="res://sprites/text.png" type="Texture" id=7]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -37,6 +38,16 @@ flags = 4
 atlas = ExtResource( 3 )
 region = Rect2( 0, 400, 350, 50 )
 
+[sub_resource type="AtlasTexture" id=8]
+flags = 4
+atlas = ExtResource( 7 )
+region = Rect2( 57, 292.448, 224, 115 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 4
+atlas = ExtResource( 7 )
+region = Rect2( -6, 604.689, 308, 91 )
+
 [node name="Stage" type="Node2D"]
 script = ExtResource( 1 )
 __meta__ = {
@@ -48,7 +59,7 @@ position = Vector2( 300, 256 )
 texture = ExtResource( 2 )
 
 [node name="bar" type="Sprite" parent="."]
-position = Vector2( 325, 420 )
+position = Vector2( 325.5, 420 )
 texture = SubResource( 1 )
 
 [node name="lane_input_0" type="Sprite" parent="."]
@@ -156,6 +167,35 @@ margin_top = 30.0
 margin_right = 60.0
 margin_bottom = 45.0
 text = "STREAK:"
+scroll_active = false
+
+[node name="PauseArrow" type="Sprite" parent="."]
+visible = false
+position = Vector2( 300, 325 )
+scale = Vector2( 0.15, 0.15 )
+z_index = 6
+texture = SubResource( 8 )
+
+[node name="PauseSprites" type="Node2D" parent="."]
+visible = false
+position = Vector2( 340, 320 )
+z_index = 6
+
+[node name="Pause" type="Sprite" parent="PauseSprites"]
+position = Vector2( -15, -120 )
+texture = SubResource( 7 )
+
+[node name="RESUME" type="RichTextLabel" parent="PauseSprites"]
+margin_right = 60.0
+margin_bottom = 30.0
+text = "RESUME"
+scroll_active = false
+
+[node name="EXIT" type="RichTextLabel" parent="PauseSprites"]
+margin_top = 40.0
+margin_right = 60.0
+margin_bottom = 60.0
+text = "EXIT"
 scroll_active = false
 [connection signal="finished" from="MusicPlayer" to="MusicPlayer" method="_on_MusicPlayer_finished"]
 [connection signal="timeout" from="MusicPlayer/start_timer" to="MusicPlayer" method="_on_start_timer_timeout"]

@@ -146,13 +146,16 @@ func set_mode():
 func search_dir(dir_name):
 	var file_names = []
 	var dir = Directory.new()
-	dir.open(SONGS_DIRECTORY + dir_name)
+	dir.open(dir_name)
 	dir.list_dir_begin()
 
 	var file_name = dir.get_next()
 	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(".song"):
-			file_names.append(file_name)
+		if not dir.current_is_dir():
+			if file_name.ends_with(".song"):
+				file_names.append([dir_name, file_name])
+		elif file_name != ".." and file_name != ".":
+			file_names += search_dir(dir_name + "/" + file_name)
 		file_name = dir.get_next()
 	return file_names
 
@@ -169,10 +172,8 @@ func parse_song_files():
 		if not dir.current_is_dir():
 			if file_name.ends_with(".song"):
 				file_names.append(["", file_name])
-		elif file_name != "..":
-			var dir_files = search_dir(file_name)
-			for dir_file in dir_files:
-				file_names.append([file_name, dir_file])
+		elif file_name != ".." and file_name != ".":
+			file_names += search_dir(SONGS_DIRECTORY + file_name)
 		file_name = dir.get_next()
 
 	dir.list_dir_end()
@@ -187,11 +188,12 @@ func parse_song_files():
 	for file_name_entry in file_names:
 		song_file_dir = file_name_entry[0]
 		song_file_name = file_name_entry[1]
+		print(song_file_dir + " " + song_file_name)
 		song_file_path = song_file_name
 		if song_file_dir != "":
 			song_file_path = song_file_dir + "/" + song_file_name
 		file = File.new()
-		file.open(SONGS_DIRECTORY + song_file_path, File.READ)
+		file.open(song_file_path, File.READ)
 		version = file.get_line()
 		song_file = {}
 		if version != "2":
@@ -210,11 +212,11 @@ func parse_song_files():
 			song_file[SongFileItem.DURATION] = ""
 		else:
 			song_file[SongFileItem.SONG_FILE] = song_file_name
-			song_file[SongFileItem.OGG_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
-			song_file[SongFileItem.EASY_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
-			song_file[SongFileItem.MEDIUM_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
-			song_file[SongFileItem.EXPERT_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
-			song_file[SongFileItem.EXPERTPLUS_MIDI_FILE] = SONGS_DIRECTORY + song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.OGG_FILE] = song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.EASY_MIDI_FILE] = song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.MEDIUM_MIDI_FILE] = song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.EXPERT_MIDI_FILE] = song_file_dir + "/" + file.get_line()
+			song_file[SongFileItem.EXPERTPLUS_MIDI_FILE] = song_file_dir + "/" + file.get_line()
 			song_file[SongFileItem.SONG_TITLE] = file.get_line()
 			song_file[SongFileItem.SONG_ARTIST] = file.get_line()
 			song_file[SongFileItem.SONG_YEAR] = file.get_line()
