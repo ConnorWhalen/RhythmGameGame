@@ -186,10 +186,11 @@ margin_left = 6.71002
 margin_top = 491.448
 margin_right = 97.71
 margin_bottom = 516.448
-text = "Version 0.2.0"
+text = "Version 0.2.1"
 scroll_active = false
 
 [node name="SongSelector" type="Node2D" parent="."]
+editor/display_folded = true
 visible = false
 position = Vector2( 300, 0 )
 script = ExtResource( 6 )
@@ -279,6 +280,7 @@ scroll_active = false
 script = ExtResource( 11 )
 
 [node name="InputMap" type="Node2D" parent="."]
+editor/display_folded = true
 visible = false
 position = Vector2( 300, 256 )
 script = ExtResource( 12 )
