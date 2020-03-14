@@ -103,6 +103,7 @@ func set_state(state):
 			$SettingsDescription.visible = false
 		State.SONG_MENU:
 			$SongSelector.visible = false
+			$SongSelector.off()
 
 	current_state = state
 

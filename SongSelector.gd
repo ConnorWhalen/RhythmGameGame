@@ -13,6 +13,7 @@ enum SongFileItem {
 	SONG_YEAR
 	TRACK_AUTHOR
 	DURATION
+	SAMPLE_START
 }
 
 enum Mode {
@@ -63,6 +64,8 @@ func get_stage_data():
 
 
 func reset():
+	$SongArrow.visible = true
+	$FolderNotFound.visible = false
 	current_selection = 0
 	parse_song_files()
 
@@ -85,6 +88,12 @@ func reset():
 	$SongArrow.position.x = -50
 	$SongArrow.position.y = SONG_SELECTION_OFFSET + SONG_SELECTION_HEIGHT/2
 
+	set_sampler()
+
+
+func off():
+	$SongSampler.off()
+
 
 
 func left():
@@ -104,6 +113,7 @@ func right():
 func up():
 	if current_selection > 0:
 		current_selection -= 1
+		set_sampler()
 
 		if current_selection < current_height:
 			current_height -= 1
@@ -116,6 +126,7 @@ func up():
 func down():
 	if current_selection < song_selections.size()-1:
 		current_selection += 1
+		set_sampler()
 
 		if current_selection >= current_height+SONGS_PER_SCREEN:
 			current_height += 1
@@ -143,6 +154,13 @@ func set_mode():
 			$ExpertPlusBG.visible = true
 
 
+func set_sampler():
+	if song_files.size() > current_selection:
+		var filename = song_files[current_selection][SongFileItem.OGG_FILE]
+		var sample_start = song_files[current_selection][SongFileItem.SAMPLE_START]
+		$SongSampler.reset(filename, sample_start)
+
+
 func search_dir(dir_name):
 	var file_names = []
 	var dir = Directory.new()
@@ -164,6 +182,12 @@ func parse_song_files():
 	song_files = []
 	var file_names = []
 	var dir = Directory.new()
+
+	if not dir.dir_exists(SONGS_DIRECTORY):
+		$SongArrow.visible = false
+		$FolderNotFound.visible = true
+		return
+
 	dir.open(SONGS_DIRECTORY)
 	dir.list_dir_begin()
 
@@ -196,7 +220,7 @@ func parse_song_files():
 		file.open(song_file_path, File.READ)
 		version = file.get_line()
 		song_file = {}
-		if version != "2":
+		if version != "3":
 			print("Incompatible  song file version %s!" % version)
 			song_file[SongFileItem.SONG_FILE] = song_file_name
 			song_file[SongFileItem.SONG_TITLE] = song_file_name
@@ -210,6 +234,7 @@ func parse_song_files():
 			song_file[SongFileItem.SONG_YEAR] = ""
 			song_file[SongFileItem.TRACK_AUTHOR] = ""
 			song_file[SongFileItem.DURATION] = ""
+			song_file[SongFileItem.SAMPLE_START] = ""
 		else:
 			song_file[SongFileItem.SONG_FILE] = song_file_name
 			song_file[SongFileItem.OGG_FILE] = song_file_dir + "/" + file.get_line()
@@ -222,6 +247,9 @@ func parse_song_files():
 			song_file[SongFileItem.SONG_YEAR] = file.get_line()
 			song_file[SongFileItem.TRACK_AUTHOR] = file.get_line()
 			song_file[SongFileItem.DURATION] = file.get_line()
+			var sample_start_str = file.get_line()
+			var sample_start = sample_start_str.split(":")
+			song_file[SongFileItem.SAMPLE_START] = int(sample_start[0]) * 60 + float(sample_start[1])
 		song_files.append(song_file)
 
 

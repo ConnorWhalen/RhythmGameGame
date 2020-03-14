@@ -18,17 +18,17 @@ flags = 4
 atlas = ExtResource( 4 )
 region = Rect2( 0, 32, 32, 32 )
 
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 0, 32, 32, 32 )
+
 [sub_resource type="AtlasTexture" id=4]
 flags = 4
 atlas = ExtResource( 4 )
 region = Rect2( 0, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=5]
-flags = 4
-atlas = ExtResource( 4 )
-region = Rect2( 0, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 3 )
 region = Rect2( 0, 400, 350, 50 )
@@ -38,12 +38,12 @@ flags = 4
 atlas = ExtResource( 3 )
 region = Rect2( 0, 400, 350, 50 )
 
-[sub_resource type="AtlasTexture" id=8]
+[sub_resource type="AtlasTexture" id=7]
 flags = 4
 atlas = ExtResource( 7 )
 region = Rect2( 57, 292.448, 224, 115 )
 
-[sub_resource type="AtlasTexture" id=7]
+[sub_resource type="AtlasTexture" id=8]
 flags = 4
 atlas = ExtResource( 7 )
 region = Rect2( -6, 604.689, 308, 91 )
@@ -102,19 +102,19 @@ texture = SubResource( 2 )
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
-texture = SubResource( 4 )
+texture = SubResource( 3 )
 
 [node name="lane_input_7" type="Sprite" parent="."]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
-texture = SubResource( 5 )
+texture = SubResource( 4 )
 
 [node name="lane_input_8" type="Sprite" parent="."]
 visible = false
 position = Vector2( 150, 420 )
 z_index = 1
-texture = SubResource( 3 )
+texture = SubResource( 5 )
 
 [node name="lane_input_9" type="Sprite" parent="."]
 visible = false
@@ -174,16 +174,17 @@ visible = false
 position = Vector2( 300, 325 )
 scale = Vector2( 0.15, 0.15 )
 z_index = 6
-texture = SubResource( 8 )
+texture = SubResource( 7 )
 
 [node name="PauseSprites" type="Node2D" parent="."]
+editor/display_folded = true
 visible = false
 position = Vector2( 340, 320 )
 z_index = 6
 
 [node name="Pause" type="Sprite" parent="PauseSprites"]
 position = Vector2( -15, -120 )
-texture = SubResource( 7 )
+texture = SubResource( 8 )
 
 [node name="RESUME" type="RichTextLabel" parent="PauseSprites"]
 margin_right = 60.0
@@ -196,6 +197,14 @@ margin_top = 40.0
 margin_right = 60.0
 margin_bottom = 60.0
 text = "EXIT"
+scroll_active = false
+
+[node name="Controls" type="RichTextLabel" parent="."]
+margin_left = 10.0
+margin_top = 465.0
+margin_right = 144.0
+margin_bottom = 488.0
+text = "ENTER: Pause"
 scroll_active = false
 [connection signal="finished" from="MusicPlayer" to="MusicPlayer" method="_on_MusicPlayer_finished"]
 [connection signal="timeout" from="MusicPlayer/start_timer" to="MusicPlayer" method="_on_start_timer_timeout"]

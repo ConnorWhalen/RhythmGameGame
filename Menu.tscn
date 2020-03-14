@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://Menu.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Fullscreens-10.png.png" type="Texture" id=2]
@@ -10,9 +10,10 @@
 [ext_resource path="res://sprites/Fullscreens-7.png.png" type="Texture" id=8]
 [ext_resource path="res://sprites/Fullscreens-8.png.png" type="Texture" id=9]
 [ext_resource path="res://sprites/Fullscreens-4.png.png" type="Texture" id=10]
-[ext_resource path="res://InputMap.gd" type="Script" id=11]
-[ext_resource path="res://InputMapItem.gd" type="Script" id=12]
-[ext_resource path="res://sprites/Letters.png" type="Texture" id=13]
+[ext_resource path="res://SongSampler.gd" type="Script" id=11]
+[ext_resource path="res://InputMap.gd" type="Script" id=12]
+[ext_resource path="res://InputMapItem.gd" type="Script" id=13]
+[ext_resource path="res://sprites/Letters.png" type="Texture" id=14]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -39,94 +40,94 @@ flags = 4
 atlas = ExtResource( 4 )
 region = Rect2( 0, 300, 300, 100 )
 
-[sub_resource type="AtlasTexture" id=16]
+[sub_resource type="AtlasTexture" id=6]
 flags = 4
 atlas = ExtResource( 4 )
 region = Rect2( 0, 300, 300, 100 )
 
-[sub_resource type="AtlasTexture" id=6]
-flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 0, 0, 32, 32 )
-
 [sub_resource type="AtlasTexture" id=7]
 flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 32, 0, 32, 32 )
+atlas = ExtResource( 14 )
+region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=8]
 flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 64.5, 0.5, 31, 31 )
+atlas = ExtResource( 14 )
+region = Rect2( 32, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=9]
 flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 96, 0, 32, 32 )
+atlas = ExtResource( 14 )
+region = Rect2( 64.5, 0.5, 31, 31 )
 
 [sub_resource type="AtlasTexture" id=10]
 flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 0, 32, 32, 32 )
+atlas = ExtResource( 14 )
+region = Rect2( 96, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=11]
 flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 32, 32, 32, 32 )
+atlas = ExtResource( 14 )
+region = Rect2( 0, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=12]
 flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 64, 32, 32, 32 )
+atlas = ExtResource( 14 )
+region = Rect2( 32, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=13]
 flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 96, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=17]
-flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 64, 64, 32, 32 )
+atlas = ExtResource( 14 )
+region = Rect2( 64, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=14]
 flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 0, 64, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=18]
-flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 96, 64, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=19]
-flags = 4
-atlas = ExtResource( 13 )
-region = Rect2( 0, 96, 32, 32 )
+atlas = ExtResource( 14 )
+region = Rect2( 96, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=15]
 flags = 4
-atlas = ExtResource( 13 )
+atlas = ExtResource( 14 )
+region = Rect2( 64, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=16]
+flags = 4
+atlas = ExtResource( 14 )
+region = Rect2( 0, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=17]
+flags = 4
+atlas = ExtResource( 14 )
+region = Rect2( 96, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=18]
+flags = 4
+atlas = ExtResource( 14 )
+region = Rect2( 0, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=19]
+flags = 4
+atlas = ExtResource( 14 )
 region = Rect2( 32, 96, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=20]
 flags = 4
-atlas = ExtResource( 13 )
+atlas = ExtResource( 14 )
 region = Rect2( 64, 96, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=21]
 flags = 4
-atlas = ExtResource( 13 )
+atlas = ExtResource( 14 )
 region = Rect2( 32, 64, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=22]
 flags = 4
-atlas = ExtResource( 13 )
+atlas = ExtResource( 14 )
 region = Rect2( 96, 96, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=23]
 flags = 4
-atlas = ExtResource( 13 )
+atlas = ExtResource( 14 )
 region = Rect2( 0, 128, 32, 32 )
 
 [node name="Menu" type="Node2D"]
@@ -220,7 +221,7 @@ texture = SubResource( 5 )
 [node name="ModeArrow" type="Sprite" parent="SongSelector"]
 position = Vector2( -249.045, 111.126 )
 scale = Vector2( 0.1, 0.1 )
-texture = SubResource( 16 )
+texture = SubResource( 6 )
 
 [node name="EasyText" type="RichTextLabel" parent="SongSelector"]
 margin_left = -220.0
@@ -263,103 +264,118 @@ Play Song:		ENTER
 Back:			   BACKSPACE"
 scroll_active = false
 
+[node name="FolderNotFound" type="RichTextLabel" parent="SongSelector"]
+visible = false
+margin_left = -57.0
+margin_top = 172.0
+margin_right = 127.0
+margin_bottom = 278.0
+text = "Songs folder not found!
+
+Make sure the folder is called \"songs\" and it is in the correct location"
+scroll_active = false
+
+[node name="SongSampler" type="AudioStreamPlayer" parent="SongSelector"]
+script = ExtResource( 11 )
+
 [node name="InputMap" type="Node2D" parent="."]
-editor/display_folded = true
 visible = false
 position = Vector2( 300, 256 )
-script = ExtResource( 11 )
+script = ExtResource( 12 )
 
 [node name="Lane0" type="Node2D" parent="InputMap"]
 editor/display_folded = true
 position = Vector2( -218.298, -16.6908 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key" type="Sprite" parent="InputMap/Lane0"]
-texture = SubResource( 6 )
+texture = SubResource( 7 )
 
 [node name="Lane1" type="Node2D" parent="InputMap"]
 editor/display_folded = true
 position = Vector2( -158.124, -15.8124 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key" type="Sprite" parent="InputMap/Lane1"]
-texture = SubResource( 7 )
+texture = SubResource( 8 )
 
 [node name="Lane2" type="Node2D" parent="InputMap"]
 editor/display_folded = true
 position = Vector2( -103.22, -15.3731 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key" type="Sprite" parent="InputMap/Lane2"]
-texture = SubResource( 8 )
+texture = SubResource( 9 )
 
 [node name="Lane3" type="Node2D" parent="InputMap"]
 editor/display_folded = true
 position = Vector2( -50.0725, -14.4947 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key" type="Sprite" parent="InputMap/Lane3"]
-texture = SubResource( 9 )
+texture = SubResource( 10 )
 
 [node name="Lane4" type="Node2D" parent="InputMap"]
 editor/display_folded = true
 position = Vector2( 65.4456, -14.0555 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key" type="Sprite" parent="InputMap/Lane4"]
-texture = SubResource( 10 )
+texture = SubResource( 11 )
 
 [node name="Lane5" type="Node2D" parent="InputMap"]
 editor/display_folded = true
 position = Vector2( 115.957, -14.9339 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key" type="Sprite" parent="InputMap/Lane5"]
-texture = SubResource( 11 )
+texture = SubResource( 12 )
 
 [node name="Lane6" type="Node2D" parent="InputMap"]
 editor/display_folded = true
 position = Vector2( 166.469, -15.3731 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key" type="Sprite" parent="InputMap/Lane6"]
-texture = SubResource( 12 )
+texture = SubResource( 13 )
 
 [node name="Lane7" type="Node2D" parent="InputMap"]
 editor/display_folded = true
 position = Vector2( 213.467, -12.2985 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key" type="Sprite" parent="InputMap/Lane7"]
-texture = SubResource( 13 )
+texture = SubResource( 14 )
 
 [node name="Lane8" type="Node2D" parent="InputMap"]
+editor/display_folded = true
 position = Vector2( -132.87, 84.1876 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key1" type="Sprite" parent="InputMap/Lane8"]
 position = Vector2( -54, 0 )
-texture = SubResource( 17 )
+texture = SubResource( 15 )
 
 [node name="Key2" type="Sprite" parent="InputMap/Lane8"]
 position = Vector2( -18, 0 )
-texture = SubResource( 14 )
+texture = SubResource( 16 )
 
 [node name="Key3" type="Sprite" parent="InputMap/Lane8"]
 position = Vector2( 18, 0 )
-texture = SubResource( 18 )
+texture = SubResource( 17 )
 
 [node name="Key4" type="Sprite" parent="InputMap/Lane8"]
 position = Vector2( 54, 0 )
-texture = SubResource( 19 )
+texture = SubResource( 18 )
 
 [node name="Lane9" type="Node2D" parent="InputMap"]
+editor/display_folded = true
 position = Vector2( 135.766, 82.3 )
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="Key1" type="Sprite" parent="InputMap/Lane9"]
 position = Vector2( -72, 0 )
-texture = SubResource( 15 )
+texture = SubResource( 19 )
 
 [node name="Key2" type="Sprite" parent="InputMap/Lane9"]
 position = Vector2( -36, 0 )

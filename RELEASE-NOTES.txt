@@ -8,3 +8,8 @@
 - Added a letter rank to the results screen
 - Added a "new record" popup to the results screen
 - Added pausing to the main game
+
+***** ***** Version 0.2.1 ***** *****
+- Added an error message if the songs folder cannot be found
+- Added song sampling to the choose song menu
+
