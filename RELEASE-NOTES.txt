@@ -11,5 +11,5 @@
 
 ***** ***** Version 0.2.1 ***** *****
 - Added an error message if the songs folder cannot be found
-- Added song sampling to the choose song menu
+- Added song sampling to the choose song menu (requires song file upgrade)
 

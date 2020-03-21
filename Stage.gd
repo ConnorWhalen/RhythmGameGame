@@ -142,12 +142,12 @@ func spawn_gem(lane_number, hit_time, hold_end):
 	if lane_number < GEM_LANES * 2:
 		gem.lane_number = lane_number%GEM_LANES
 		gem.z_index = 4
-		if lane_number >= GEM_LANES:
-			gem.set_hold((hold_end - hit_time) * gem_speed)
 		if gem.lane_number > 3:
 			gem.set_off_id(gem.lane_number - 4)
 		else:
 			gem.set_off_id(gem.lane_number)
+		if lane_number >= GEM_LANES:
+			gem.set_hold((hold_end - hit_time) * gem_speed)
 	else:
 		gem.lane_number = lane_number/2
 		gem.set_type(GemSprite.Type.BAR)

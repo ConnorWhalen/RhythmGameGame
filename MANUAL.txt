@@ -28,7 +28,7 @@ Song File:
 The song file is a simple text file that contains everything the game needs to know about the track.
 
 FORMAT:
-- song file version (always 2)
+- song file version (always 3)
 - OGG file name
 - MIDI file name for easy mode track
 - MIDI file name for medium mode track
@@ -39,9 +39,10 @@ FORMAT:
 - Song Release Year
 - Track Author (that's you!)
 - Track Length
+- The starting point of the 30 second sample for the menu
 
 EXAMPLE:
-2
+3
 Our-Weary-Roots.ogg
 roots gh easy.mid
 roots gh med.mid
@@ -52,6 +53,7 @@ Dendron
 2016
 Connor
 3:40
+0:53
 
 OGG File:
 OGG is an audio format similar to mp3. If you have an audio file of your song you should be able to convert it to OGG online if you google "convert xxx to ogg".

@@ -87,7 +87,7 @@ region = Rect2( 65.0741, 97.1642, 30.6173, 30.8148 )
 [sub_resource type="AtlasTexture" id=17]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 96, 33, 32, 30 )
+region = Rect2( 97, 33, 30, 30 )
 
 [sub_resource type="AtlasTexture" id=18]
 flags = 4
@@ -239,34 +239,47 @@ texture = SubResource( 12 )
 
 [node name="GreenTail" type="Sprite" parent="."]
 visible = false
+scale = Vector2( 1, 1.03226 )
 texture = SubResource( 13 )
 
 [node name="YellowTail" type="Sprite" parent="."]
 visible = false
+scale = Vector2( 1, 1.03226 )
 texture = SubResource( 14 )
 
 [node name="RedTail" type="Sprite" parent="."]
 visible = false
+scale = Vector2( 1, 1.03226 )
 texture = SubResource( 15 )
 
 [node name="OffTail" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, -4.76837e-07 )
+scale = Vector2( 1, 1.06667 )
 texture = SubResource( 16 )
 
 [node name="GreenMiddle" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, -4.76837e-07 )
+scale = Vector2( 1, 1.06667 )
 texture = SubResource( 17 )
 
 [node name="YellowMiddle" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, 4.76837e-07 )
+scale = Vector2( 1, 1.06667 )
 texture = SubResource( 18 )
 
 [node name="RedMiddle" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, 4.76837e-07 )
+scale = Vector2( 1, 1.06667 )
 texture = SubResource( 19 )
 
 [node name="OffMiddle" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, 4.76837e-07 )
+scale = Vector2( 1, 1.06667 )
 texture = SubResource( 20 )
 
 [node name="OffGem0" type="Sprite" parent="."]
@@ -291,18 +304,22 @@ texture = SubResource( 24 )
 
 [node name="OffMiddle0" type="Sprite" parent="."]
 visible = false
+scale = Vector2( 1, 1.03226 )
 texture = SubResource( 25 )
 
 [node name="OffMiddle1" type="Sprite" parent="."]
 visible = false
+scale = Vector2( 1, 1.03226 )
 texture = SubResource( 26 )
 
 [node name="OffMiddle2" type="Sprite" parent="."]
 visible = false
+scale = Vector2( 1, 1.03226 )
 texture = SubResource( 27 )
 
 [node name="OffMiddle3" type="Sprite" parent="."]
 visible = false
+scale = Vector2( 1, 1.03226 )
 texture = SubResource( 28 )
 
 [node name="OffMiddleBar" type="Sprite" parent="."]
@@ -311,20 +328,30 @@ texture = SubResource( 29 )
 
 [node name="OffTail0" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, -0.25 )
+scale = Vector2( 1, 1.05 )
 texture = SubResource( 30 )
 
 [node name="OffTail1" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, 5.96046e-08 )
+scale = Vector2( 1, 1.06667 )
 texture = SubResource( 31 )
 
 [node name="OffTail2" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, 5.96046e-08 )
+scale = Vector2( 1, 1.06667 )
 texture = SubResource( 32 )
 
 [node name="OffTail3" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, 4.76837e-07 )
+scale = Vector2( 1, 1.06667 )
 texture = SubResource( 33 )
 
 [node name="OffTailBar" type="Sprite" parent="."]
 visible = false
+position = Vector2( 0, -2.68221e-07 )
+scale = Vector2( 1, 1.06667 )
 texture = SubResource( 34 )

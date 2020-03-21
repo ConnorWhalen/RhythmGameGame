@@ -25,9 +25,11 @@ var off_id
 var current_state
 var current_sprite
 var current_middle
+var current_middle_scale
 var current_tail
 var current_off_sprite
 var current_off_middle
+var current_off_middle_scale
 var current_off_tail
 var is_pressed
 var pressed_time
@@ -39,9 +41,11 @@ func _ready():
 	current_state = State.OFF
 	current_off_sprite = $OffGem0
 	current_off_middle = $OffMiddle0
+	current_off_middle_scale = current_off_middle.scale.y
 	current_off_tail = $OffTail0
 	current_sprite = current_off_sprite
 	current_middle = current_off_middle
+	current_middle_scale = current_middle.scale.y
 	current_tail = current_off_tail
 	current_type = Type.GEM
 	is_pressed = false
@@ -89,6 +93,8 @@ func set_type(type):
 			current_off_tail = $OffTailBar
 			current_middle = current_off_middle
 			current_tail = current_off_tail
+			current_off_middle_scale = current_off_middle.scale.y
+			current_middle_scale = current_middle.scale.y
 
 
 func set_hold(length):
@@ -96,7 +102,7 @@ func set_hold(length):
 	note_length = length
 	current_off_tail.position.y = -length
 	current_off_middle.position.y = -length/2
-	current_off_middle.scale.y = length/32
+	current_off_middle.scale.y = (length/32) * current_off_middle_scale
 	current_off_tail.visible = true
 	current_off_middle.visible = true
 
@@ -107,20 +113,15 @@ func set_off_id(_off_id):
 	current_off_middle.visible = false
 	current_off_tail.visible = false
 
-	var next_off_sprite = get_node("OffGem" + str(off_id))
-	var next_off_middle = get_node("OffMiddle" + str(off_id))
-	var next_off_tail = get_node("OffTail" + str(off_id))
-	next_off_tail.position = current_off_tail.position
-	next_off_tail.scale = current_off_tail.scale
-	next_off_middle.position = current_off_middle.position
-	next_off_middle.scale = current_off_middle.scale
-	current_off_sprite = next_off_sprite
-	current_off_middle = next_off_middle
-	current_off_tail = next_off_tail
+	current_off_sprite = get_node("OffGem" + str(off_id))
+	current_off_middle = get_node("OffMiddle" + str(off_id))
+	current_off_tail = get_node("OffTail" + str(off_id))
+	current_off_middle_scale = current_off_middle.scale.y
 	if current_state == State.OFF:
 		current_sprite = current_off_sprite
 		current_middle = current_off_middle
 		current_tail = current_off_tail
+		current_middle_scale = current_off_middle_scale
 
 	current_off_sprite.visible = true
 	current_off_middle.visible = true
@@ -137,7 +138,7 @@ func update_tail(progress):
 
 			current_tail.position.y = -note_length
 			current_middle.position.y = -note_length/2
-			current_middle.scale.y = note_length/30
+			current_middle.scale.y = (note_length/32) * current_middle_scale
 			hold_complete = true
 		else:
 			current_off_middle.visible = true
@@ -147,9 +148,9 @@ func update_tail(progress):
 
 			current_off_tail.position.y = -note_length
 			current_off_middle.position.y = -note_length + (note_length-progress)/2
-			current_off_middle.scale.y = (note_length-progress)/32
+			current_off_middle.scale.y = ((note_length-progress)/32) * current_off_middle_scale
 			current_middle.position.y = -progress/2
-			current_middle.scale.y = progress/30
+			current_middle.scale.y = (progress/32) * current_middle_scale
 
 
 func gem_size():
@@ -166,6 +167,7 @@ func set_state(state):
 				Type.BAR:
 					current_sprite = $BarGreenGemPressed
 			current_middle = $GreenMiddle
+			current_middle_scale = current_middle.scale.y
 			current_tail = $GreenTail
 			is_evaluated = true
 			is_pressed = true
@@ -176,6 +178,7 @@ func set_state(state):
 				Type.BAR:
 					current_sprite = $BarYellowGemPressed
 			current_middle = $YellowMiddle
+			current_middle_scale = current_middle.scale.y
 			current_tail = $YellowTail
 			is_evaluated = true
 			is_pressed = true
@@ -186,6 +189,7 @@ func set_state(state):
 				Type.BAR:
 					current_sprite = $BarRedGem
 			current_middle = $RedMiddle
+			current_middle_scale = current_middle.scale.y
 			current_tail = $RedTail
 			is_evaluated = true
 		State.OFF:
