@@ -10,9 +10,9 @@ signal mode_stage(song_data)
 signal mode_menu
 signal mode_results(results_data)
 
-onready var stage_scene = preload("res://Stage.tscn")
-onready var menu_scene = preload("res://Menu.tscn")
-onready var results_scene = preload("res://Results.tscn")
+onready var stage_scene = preload("res://stage/Stage.tscn")
+onready var menu_scene = preload("res://menu/Menu.tscn")
+onready var results_scene = preload("res://results/Results.tscn")
 
 var current_mode_id
 var current_mode

@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/rock-rhythm.ogg-61663277604a88c724d0e03dec318ff4.oggstr"
+
+[deps]
+
+source_file="res://rock-rhythm.ogg"
+dest_files=[ "res://.import/rock-rhythm.ogg-61663277604a88c724d0e03dec318ff4.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
