@@ -187,7 +187,7 @@ margin_left = 6.71002
 margin_top = 491.448
 margin_right = 97.71
 margin_bottom = 516.448
-text = "Version 1.0.0"
+text = "Version 1.0.1"
 scroll_active = false
 
 [node name="SongSelector" type="Node2D" parent="."]

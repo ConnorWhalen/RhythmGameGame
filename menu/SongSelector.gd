@@ -165,7 +165,9 @@ func set_sampler():
 func search_dir(dir_name):
 	var file_names = []
 	var dir = Directory.new()
-	dir.open(dir_name)
+	var code = dir.open(dir_name)
+	if code != 0:
+		print("FOLDER %s OPEN RETURN CODE: %s", dir_name, str(code))
 	dir.list_dir_begin()
 
 	var file_name = dir.get_next()
@@ -184,12 +186,14 @@ func parse_song_files():
 	var file_names = []
 	var dir = Directory.new()
 
-	if not dir.dir_exists(SONGS_DIRECTORY):
+	var code = dir.open(SONGS_DIRECTORY)
+	print("OPEN RETURN CODE: " + str(code))
+
+	if code == ERR_INVALID_PARAMETER:
 		$SongArrow.visible = false
 		$FolderNotFound.visible = true
 		return
 
-	dir.open(SONGS_DIRECTORY)
 	dir.list_dir_begin()
 
 	var file_name = dir.get_next()
