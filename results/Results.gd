@@ -4,8 +4,6 @@ signal mode_stage
 signal mode_menu
 signal mode_results
 
-var SAVE_FILE_NAME = "user://save_file_2.save"
-
 var score
 var gem_count
 var green_count
@@ -44,39 +42,9 @@ func init(results_data):
 	$RankF.visible = false
 	render_rank(total_percent * 100)
 
-	var save_file = File.new()
-	save_file.open(SAVE_FILE_NAME, File.READ)
-	var save_object = save_file.get_var()
-	var records = null
-	if save_object:
-		records = save_object.get("records")
-	var record_found = false
 	var percent = make_single_decimal((float(green_count) + 0.5 * float(yellow_count))/ float(gem_count))
-	if not records:
-		records = []
-		var new_record = {"song_file_name": song_file_name, "mode": song_mode, "score": score, "streak": best_streak, "percent": percent}
-		records.append(new_record)
-	else:
-		for record in records:
-			if record["mode"] == "normal":
-				record["mode"] = "expert"
-			if record["mode"] == "advanced":
-				record["mode"] = "expertplus"
-			if record["song_file_name"] == song_file_name and record["mode"] == song_mode:
-				if score > record["score"]:
-					record["score"] = score
-					record["streak"] = best_streak
-					record["percent"] = percent
-					$NewRecordText.visible = true
-				record_found = true
-		if not record_found:
-			var new_record = {"song_file_name": song_file_name, "mode": song_mode, "score": score, "streak": best_streak, "percent": percent}
-			records.append(new_record)
 
-	save_file.close()
-	save_file.open(SAVE_FILE_NAME, File.WRITE)
-	save_file.store_var({"records": records})
-	save_file.close()
+	$NewRecordText.visible = Save.store_record(song_file_name, song_mode, score, best_streak, percent)
 
 
 func render_rank(percent):

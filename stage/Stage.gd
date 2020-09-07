@@ -20,8 +20,8 @@ var LANE_GAP = 10
 var LANE_COUNT = 10
 var GEM_LANES = 8
 
-var GREEN_LEEWAY_SECS = 0.1
-var YELLOW_LEEWAY_SECS = 0.2
+var GREEN_LEEWAY_SECS = 0.05
+var YELLOW_LEEWAY_SECS = 0.1
 var HOLD_PROGRESS_PERIOD = 0.1
 
 var EVALUATE_HEIGHT = 420
@@ -39,11 +39,14 @@ var song_mode
 var song_length = 0
 var gem_list = []
 var gem_starts = []
-var gem_speed = 300
+var gem_speed = 250
+var note_speed = 1.0
 var held_gems = []
 var elapsed
 var paused = false
 var pause_debounce = true
+var left_debounce = true
+var right_debounce = true
 var paused_resume_exitb = true
 var lane_input_rising
 var lane_input_held
@@ -80,20 +83,11 @@ func init(song_data):
 	$MusicPlayer.set_song(song_data[0])
 	song_file_name = song_data[2]
 	song_mode = song_data[3]
-	match song_mode:
-		"easy":
-			gem_speed = 250
-		"medium":
-			gem_speed = 300
-		"expert":
-			gem_speed = 350
-		"expertplus":
-			gem_speed = 500 # 350
+	note_speed = Save.get_setting(Save.NOTE_SPEED)
+	gem_speed = note_speed * 250
+	$PauseSprites.get_node("SPEED").text = "Speed: " + ("%.1f" % note_speed)
 	ogg_file_name = song_data[0]
 	song_length = $MusicPlayer.stream.get_length()
-	
-	print("REGION RECT WIDTH: " + str($SongProgress.region_rect.size.x))
-	print(" WIDTH: " + str($SongProgress.texture.get_width()))
 
 
 func _process(delta):
@@ -101,6 +95,8 @@ func _process(delta):
 		emit_signal("mode_results", [score, gem_count, green_count, yellow_count, red_count, best_streak, song_file_name, song_mode])
 
 	var pressed = Input.is_action_pressed("ui_accept")
+	var left_pressed = Input.is_action_pressed("ui_left")
+	var right_pressed = Input.is_action_pressed("ui_right")
 	if pressed and not pause_debounce:
 		paused = not paused
 		$PauseSprites.visible = paused
@@ -119,6 +115,14 @@ func _process(delta):
 		elif Input.is_action_pressed("ui_down") and paused_resume_exitb:
 			paused_resume_exitb = false
 			$PauseArrow.position.y += PAUSE_ARROW_GAP
+		if not left_debounce and left_pressed:
+			if note_speed > Save.NOTE_SPEED_MIN:
+				note_speed -= 0.1
+				set_note_speed()
+		elif not right_debounce and right_pressed:
+			if note_speed < Save.NOTE_SPEED_MAX:
+				note_speed += 0.1
+				set_note_speed()
 	else:
 		elapsed = $MusicPlayer.get_position()
 		spawn_gems()
@@ -132,7 +136,22 @@ func _process(delta):
 			$SongProgress.scale.x = 0
 		elif $SongProgress.scale.x > 0:
 			$SongProgress.position.x = STAGE_RIGHT + ($SongProgress.region_rect.size.x * $SongProgress.scale.x)/2
+
 	pause_debounce = pressed
+	left_debounce = left_pressed
+	right_debounce = right_pressed
+
+
+func set_note_speed():
+	gem_speed = note_speed * 250
+	$PauseSprites.get_node("SPEED").text = "Speed: " + ("%.1f" % note_speed)
+	Save.store_setting(Save.NOTE_SPEED, note_speed)
+	for gem in gem_list:
+		gem.position.y = (elapsed - gem.hit_time) * gem_speed + EVALUATE_HEIGHT
+		if gem.is_hold:
+			gem.set_hold(gem.end_time, gem_speed)
+	for gem in held_gems:
+		gem.update_tail(gem.position.y-EVALUATE_HEIGHT)
 
 
 func spawn_gems():
@@ -150,6 +169,7 @@ func spawn_gem(lane_number, hit_time, hold_end):
 	var gem = gem_scene.instance()
 	add_child(gem)
 	gem.position = Vector2(get_lane_x(lane_number), -gem.gem_size().y/2)
+	gem.hit_time = hit_time
 	if lane_number < GEM_LANES * 2:
 		gem.lane_number = lane_number%GEM_LANES
 		gem.z_index = 4
@@ -158,14 +178,13 @@ func spawn_gem(lane_number, hit_time, hold_end):
 		else:
 			gem.set_off_id(gem.lane_number)
 		if lane_number >= GEM_LANES:
-			gem.set_hold((hold_end - hit_time) * gem_speed)
+			gem.set_hold(hold_end, gem_speed)
 	else:
 		gem.lane_number = lane_number/2
 		gem.set_type(GemSprite.Type.BAR)
 		gem.z_index = 3
 		if lane_number % 2 == 1:
-			gem.set_hold((hold_end - hit_time) * gem_speed)
-	gem.hit_time = hit_time
+			gem.set_hold(hold_end, gem_speed)
 	gem_list.append(gem)
 	gem_count += 1
 

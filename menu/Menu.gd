@@ -24,6 +24,8 @@ var debounce_up = false
 var debounce_down = false
 var debounce_left = false
 var debounce_right = false
+var debounce_plus = false
+var debounce_minus = false
 
 
 func _ready():
@@ -41,6 +43,10 @@ func _process(delta):
 		debounce_left = false
 	if debounce_right and not Input.is_action_pressed("ui_right"):
 		debounce_right = false
+	if debounce_plus and not Input.is_action_pressed("plus"):
+		debounce_plus = false
+	if debounce_minus and not Input.is_action_pressed("minus"):
+		debounce_minus = false
 	match current_state:
 		State.ENTER:
 			if Input.is_action_pressed("ui_accept"):
@@ -80,6 +86,12 @@ func _process(delta):
 			elif not debounce_right and Input.is_action_pressed("ui_right"):
 				$SongSelector.right()
 				debounce_right = true
+			if not debounce_plus and Input.is_action_pressed("plus"):
+				$SongSelector.plus()
+				debounce_plus = true
+			elif not debounce_minus and Input.is_action_pressed("minus"):
+				$SongSelector.minus()
+				debounce_minus = true
 			if Input.is_action_pressed("ui_back"):
 				set_state(State.MAIN_MENU)
 

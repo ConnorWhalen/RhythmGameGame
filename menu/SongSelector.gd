@@ -27,7 +27,6 @@ enum Mode {
 onready var song_selection_scene = preload("res://menu/SongSelection.tscn")
 
 var SONGS_DIRECTORY = "songs/"
-var SAVE_FILE_NAME = "user://save_file_2.save"
 
 var SONG_SELECTION_HEIGHT = 90
 var SONG_SELECTION_OFFSET = 30
@@ -40,6 +39,7 @@ var current_mode = Mode.EASY
 var song_files
 var song_selections = []
 var records
+var note_speed
 
 var current_height
 
@@ -74,20 +74,16 @@ func reset():
 		remove_child(song_selection)
 	song_selections = []
 
-	var save_file = File.new()
-	save_file.open(SAVE_FILE_NAME, File.READ)
-	var save_object = save_file.get_var()
-	if save_object:
-		records = save_object.get("records")
-	if not records:
-		records = []
-	save_file.close()
+	records = Save.get_records()
 
 	for song_file in song_files:
 		create_song_selection(song_file)
 
 	$SongArrow.position.x = -50
 	$SongArrow.position.y = SONG_SELECTION_OFFSET + SONG_SELECTION_HEIGHT/2
+
+	note_speed = Save.get_setting(Save.NOTE_SPEED)
+	set_note_speed()
 
 	set_sampler()
 
@@ -137,6 +133,18 @@ func down():
 			$SongArrow.position.y += SONG_SELECTION_HEIGHT
 
 
+func plus():
+	if note_speed < Save.NOTE_SPEED_MAX:
+		note_speed += 0.1
+	set_note_speed()
+
+
+func minus():
+	if note_speed > Save.NOTE_SPEED_MIN:
+		note_speed -= 0.1
+	set_note_speed()
+
+
 func set_mode():
 	for selection in song_selections:
 		selection.set_mode(mode_to_string(current_mode))
@@ -153,6 +161,11 @@ func set_mode():
 			$ExpertBG.visible = true
 		Mode.EXPERT_PLUS:
 			$ExpertPlusBG.visible = true
+
+
+func set_note_speed():
+	$NoteSpeedText.text = "Speed: " + ("%.1f" % note_speed)
+	Save.store_setting(Save.NOTE_SPEED, note_speed)
 
 
 func set_sampler():

@@ -20,6 +20,7 @@ var is_evaluated
 var lane_number
 var hit_time
 var note_length
+var end_time
 var off_id
 
 var current_state
@@ -97,12 +98,13 @@ func set_type(type):
 			current_middle_scale = current_middle.scale.y
 
 
-func set_hold(length):
+func set_hold(_end_time, speed):
 	is_hold = true
-	note_length = length
-	current_off_tail.position.y = -length
-	current_off_middle.position.y = -length/2
-	current_off_middle.scale.y = (length/32) * current_off_middle_scale
+	end_time = _end_time
+	note_length = (_end_time - hit_time) * speed
+	current_off_tail.position.y = -note_length
+	current_off_middle.position.y = -note_length/2
+	current_off_middle.scale.y = (note_length/32) * current_off_middle_scale
 	current_off_tail.visible = true
 	current_off_middle.visible = true
 

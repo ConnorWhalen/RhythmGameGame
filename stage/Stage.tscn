@@ -178,7 +178,6 @@ z_index = 6
 texture = SubResource( 7 )
 
 [node name="PauseSprites" type="Node2D" parent="."]
-editor/display_folded = true
 visible = false
 position = Vector2( 340, 320 )
 z_index = 6
@@ -199,6 +198,13 @@ margin_right = 60.0
 margin_bottom = 60.0
 text = "EXIT"
 scroll_active = false
+
+[node name="SPEED" type="RichTextLabel" parent="PauseSprites"]
+margin_left = -50.0
+margin_top = 120.0
+margin_right = 40.0
+margin_bottom = 150.0
+text = "Speed: 1.0"
 
 [node name="Controls" type="RichTextLabel" parent="."]
 margin_left = 10.0
