@@ -1,6 +1,5 @@
 extends Node2D
 
-signal mode_stage
 signal mode_menu
 signal mode_results
 
@@ -11,6 +10,8 @@ var SCREEN_WIDTH = ProjectSettings.get_setting("display/window/size/width")
 var SCREEN_HEIGHT = ProjectSettings.get_setting("display/window/size/height")
 var STAGE_LEFT = 150
 var STAGE_WIDTH = 350
+var STAGE_RIGHT = STAGE_LEFT + STAGE_WIDTH
+var STAGE_RIGHT_WIDTH = SCREEN_WIDTH - STAGE_RIGHT
 var STAGE_CENTER = STAGE_LEFT + STAGE_WIDTH/2
 
 var LANE_SIZE = 40
@@ -35,6 +36,7 @@ var PAUSE_ARROW_GAP = 40
 var song_file_name = ""
 var ogg_file_name = ""
 var song_mode
+var song_length = 0
 var gem_list = []
 var gem_starts = []
 var gem_speed = 300
@@ -86,8 +88,12 @@ func init(song_data):
 		"expert":
 			gem_speed = 350
 		"expertplus":
-			gem_speed = 350
+			gem_speed = 500 # 350
 	ogg_file_name = song_data[0]
+	song_length = $MusicPlayer.stream.get_length()
+	
+	print("REGION RECT WIDTH: " + str($SongProgress.region_rect.size.x))
+	print(" WIDTH: " + str($SongProgress.texture.get_width()))
 
 
 func _process(delta):
@@ -121,6 +127,11 @@ func _process(delta):
 		check_gems()
 		$ScoreDisplay.text = str(score)
 		$StreakDisplay.text = str(current_streak)
+		$SongProgress.scale.x = (STAGE_RIGHT_WIDTH/$SongProgress.region_rect.size.x) * (elapsed/song_length)
+		if $SongProgress.scale.x < 0:
+			$SongProgress.scale.x = 0
+		elif $SongProgress.scale.x > 0:
+			$SongProgress.position.x = STAGE_RIGHT + ($SongProgress.region_rect.size.x * $SongProgress.scale.x)/2
 	pause_debounce = pressed
 
 

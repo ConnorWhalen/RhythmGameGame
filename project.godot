@@ -24,6 +24,8 @@ boot_splash/bg_color=Color( 0.137255, 0.137255, 0.137255, 0 )
 
 window/size/width=600
 window/size/height=512
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
 
 [input]
 

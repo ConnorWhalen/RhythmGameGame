@@ -49,7 +49,7 @@ func init(results_data):
 	var save_object = save_file.get_var()
 	var records = null
 	if save_object:
-	    records = save_object.get("records")
+		records = save_object.get("records")
 	var record_found = false
 	var percent = make_single_decimal((float(green_count) + 0.5 * float(yellow_count))/ float(gem_count))
 	if not records:
@@ -102,7 +102,7 @@ func render_rank(percent):
 
 
 func make_single_decimal(number):
-	return "%.1f %%" % (number * 100)
+	return "%.1f%%" % (number * 100)
 
 
 func _process(delta):

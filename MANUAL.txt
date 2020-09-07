@@ -6,7 +6,10 @@ MacOS:
 Download the dmg file and move the application to your Applications folder.
 
 Windows:
-download the exe and pck files and keep them in the same folder
+Download the exe and pck files and keep them in the same folder
+
+Linux:
+Download the x86_64 and pck files and keep them in the same folder
 
 ***** ***** ADDING SONGS ***** *****
 
@@ -19,6 +22,9 @@ place the "songs" folder in "Rock Rhythm.app/Contents/Resources"
 
 Windows:
 place the "songs" folder in the folder with your exe and pck files
+
+Linux:
+place the "songs" folder in the folder with your x86_64 and pck files
 
 ***** ***** WRITING YOUR OWN TRACKS ***** *****
 

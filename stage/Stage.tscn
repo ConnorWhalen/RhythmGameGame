@@ -49,6 +49,7 @@ atlas = ExtResource( 7 )
 region = Rect2( -6, 604.689, 308, 91 )
 
 [node name="Stage" type="Node2D"]
+position = Vector2( 0.0734253, 0 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
@@ -206,6 +207,13 @@ margin_right = 144.0
 margin_bottom = 488.0
 text = "ENTER: Pause"
 scroll_active = false
+
+[node name="SongProgress" type="Sprite" parent="."]
+position = Vector2( 500, 500 )
+scale = Vector2( 1e-05, 1 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 107.096, 168.283, 130, 13.65 )
 [connection signal="finished" from="MusicPlayer" to="MusicPlayer" method="_on_MusicPlayer_finished"]
 [connection signal="timeout" from="MusicPlayer/start_timer" to="MusicPlayer" method="_on_start_timer_timeout"]
 [connection signal="timeout" from="MusicPlayer/end_timer" to="MusicPlayer" method="_on_end_timer_timeout"]
