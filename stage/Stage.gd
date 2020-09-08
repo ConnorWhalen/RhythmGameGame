@@ -20,8 +20,6 @@ var LANE_GAP = 10
 var LANE_COUNT = 10
 var GEM_LANES = 8
 
-var GREEN_LEEWAY_SECS = 0.05
-var YELLOW_LEEWAY_SECS = 0.1
 var HOLD_PROGRESS_PERIOD = 0.1
 
 var EVALUATE_HEIGHT = 420
@@ -58,6 +56,8 @@ var yellow_count = 0
 var red_count = 0
 var current_streak = 0
 var best_streak = 0
+var gem_scale
+var lag_ms
 
 func _ready():
 	pass
@@ -73,11 +73,11 @@ func init(song_data):
 		lane_input_held.append(false)
 		lane_input_pressed.append(false)
 		if i < GEM_LANES*2:
-			var input_sprite = get_node("lane_input_" + str(i%GEM_LANES))
+			var input_sprite = $Invertible.get_node("lane_input_" + str(i%GEM_LANES))
 			input_sprite.position.x = get_lane_x(i)
-	$bar.position = Vector2(STAGE_CENTER+0.5, EVALUATE_HEIGHT)
-	$lane_input_8.position = Vector2(get_lane_x(16), EVALUATE_HEIGHT)
-	$lane_input_9.position = Vector2(get_lane_x(18), EVALUATE_HEIGHT)
+	$Invertible.get_node("bar").position = Vector2(STAGE_CENTER+0.5, EVALUATE_HEIGHT)
+	$Invertible.get_node("lane_input_8").position = Vector2(get_lane_x(16), EVALUATE_HEIGHT)
+	$Invertible.get_node("lane_input_9").position = Vector2(get_lane_x(18), EVALUATE_HEIGHT)
 	$MIDIParser.parse_file(song_data[1])
 	gem_starts = $MIDIParser.note_starts
 	$MusicPlayer.set_song(song_data[0])
@@ -88,6 +88,11 @@ func init(song_data):
 	$PauseSprites.get_node("SPEED").text = "Speed: " + ("%.1f" % note_speed)
 	ogg_file_name = song_data[0]
 	song_length = $MusicPlayer.stream.get_length()
+	if Save.get_setting(Save.INVERT_Y):
+		$Invertible.scale.y = -1
+		$Invertible.position.y = SCREEN_HEIGHT
+	gem_scale = Vector2(Save.get_setting(Save.NOTE_SCALE_X), Save.get_setting(Save.NOTE_SCALE_Y))
+	lag_ms = Save.get_setting(Save.NOTE_DELAY)
 
 
 func _process(delta):
@@ -167,9 +172,10 @@ func spawn_gems():
 
 func spawn_gem(lane_number, hit_time, hold_end):
 	var gem = gem_scene.instance()
-	add_child(gem)
+	$Invertible.add_child(gem)
 	gem.position = Vector2(get_lane_x(lane_number), -gem.gem_size().y/2)
 	gem.hit_time = hit_time
+	gem.set_scale(gem_scale)
 	if lane_number < GEM_LANES * 2:
 		gem.lane_number = lane_number%GEM_LANES
 		gem.z_index = 4
@@ -205,7 +211,7 @@ func advance_gems():
 	var gem
 	for i in range(gem_list.size()):
 		gem = gem_list[i]
-		gem.position.y = (elapsed - gem.hit_time) * gem_speed + EVALUATE_HEIGHT
+		gem.position.y = (elapsed - gem.hit_time + (lag_ms/1000.0)) * gem_speed + EVALUATE_HEIGHT
 
 
 func update_inputs():
@@ -216,7 +222,7 @@ func update_inputs():
 		lane_input_held[i] = lane_input_pressed[i] and lane_pressed
 
 		lane_input_pressed[i] = lane_pressed
-		get_node("lane_input_" + str(i)).visible = lane_pressed
+		$Invertible.get_node("lane_input_" + str(i)).visible = lane_pressed
 
 
 func check_gems():
@@ -229,34 +235,37 @@ func check_gems():
 
 	for i in range(held_gems.size()):
 		gem = held_gems[i]
+		var note_distance = elapsed - gem.hit_time + (lag_ms/1000.0)
 		if gem.hold_complete:
 			held_remove_indices.append(i)
 		elif lane_input_held[gem.lane_number]:
 			gem.update_tail(gem.position.y-EVALUATE_HEIGHT)
-			while gem.hold_progress_time < elapsed - gem.hit_time and gem.hold_progress_time < gem.note_length:
+			while gem.hold_progress_time < note_distance and gem.hold_progress_time < gem.note_length:
 				if gem.current_state == GemSprite.State.GREEN:
 					score += GREEN_HOLD_POINTS
 				elif gem.current_state == GemSprite.State.YELLOW:
 					score += YELLOW_HOLD_POINTS
 				gem.hold_progress_time += HOLD_PROGRESS_PERIOD
 		else:
+			$Invertible.remove_child(gem)
 			current_streak = 0
 			held_remove_indices.append(i)
 
 	for i in range(gem_list.size()):
 		gem = gem_list[i]
+		var note_distance = elapsed - gem.hit_time + (lag_ms/1000.0)
 
 		if not gem.is_evaluated and lane_input_rising[gem.lane_number] and not lanes_used[gem.lane_number]:
-			if abs(elapsed-gem.hit_time) < GREEN_LEEWAY_SECS:
+			if abs(note_distance) < Save.CONST_NOTE_LEEWAY_GREEN_SECS:
 				green_hit(gem, lanes_used)
-			elif abs(elapsed-gem.hit_time) < YELLOW_LEEWAY_SECS:
+			elif abs(note_distance) < Save.CONST_NOTE_LEEWAY_YELLOW_SECS:
 				yellow_hit(gem, lanes_used)
 
-		if not gem.is_evaluated and elapsed-gem.hit_time > YELLOW_LEEWAY_SECS:
+		if not gem.is_evaluated and note_distance > Save.CONST_NOTE_LEEWAY_YELLOW_SECS:
 			red_hit(gem)
 		
 		if gem.position.y - gem.note_length > SCREEN_HEIGHT + gem.gem_size().y/2:
-			remove_child(gem)
+			$Invertible.remove_child(gem)
 			remove_indices.append(i)
 
 	for i in range(remove_indices.size()-1, -1, -1):

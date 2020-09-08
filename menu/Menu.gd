@@ -8,13 +8,16 @@ enum State {
 }
 
 enum Option {
+	HOWTO,
 	PLAYSONG,
-	SETTINGS
+	SETTINGS,
+	OPTION_COUNT
 }
 
 signal mode_stage
 signal mode_menu
 signal mode_results
+signal mode_settings
 
 var current_state
 var current_selection
@@ -53,20 +56,29 @@ func _process(delta):
 				set_state(State.MAIN_MENU)
 				debounce = true
 		State.MAIN_MENU:
-			if Input.is_action_pressed("ui_left"):
-				$Arrow.set_state(Option.PLAYSONG)
-				current_selection = Option.PLAYSONG
-			elif Input.is_action_pressed("ui_right"):
-				$Arrow.set_state(Option.SETTINGS)
-				current_selection = Option.SETTINGS
+			if not debounce_left and Input.is_action_pressed("ui_left"):
+				if current_selection > 0:
+					current_selection -= 1
+				else:
+					current_selection = Option.OPTION_COUNT - 1
+				$Arrow.set_state(current_selection)
+				debounce_left = true
+			elif not debounce_right and Input.is_action_pressed("ui_right"):
+				if current_selection < Option.OPTION_COUNT:
+					current_selection += 1
+				else:
+					current_selection = 0
+				$Arrow.set_state(current_selection)
+				debounce_right = true
 			elif not debounce and Input.is_action_pressed("ui_accept"):
 				match current_selection:
 					Option.PLAYSONG:
 						set_state(State.SONG_MENU)
-						debounce = true
-					Option.SETTINGS:
+					Option.HOWTO:
 						set_state(State.SETTINGS_MENU)
-						debounce = true
+					Option.SETTINGS:
+						emit_signal("mode_settings")
+				debounce = true
 		State.SETTINGS_MENU:
 			if not debounce and Input.is_action_pressed("ui_accept"):
 				set_state(State.MAIN_MENU)
@@ -106,6 +118,7 @@ func set_state(state):
 		State.MAIN_MENU:
 			$PlaySongText.visible = false
 			$SettingsText.visible = false
+			$SettingsText2.visible = false
 			$Arrow.visible = false
 			$TitleBG.visible = false
 		State.SETTINGS_MENU:
@@ -129,6 +142,7 @@ func set_state(state):
 		State.MAIN_MENU:
 			$PlaySongText.visible = true
 			$SettingsText.visible = true
+			$SettingsText2.visible = true
 			$Arrow.visible = true
 			$TitleBG.visible = true
 			current_selection = Option.PLAYSONG

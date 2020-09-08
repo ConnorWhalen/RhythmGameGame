@@ -80,6 +80,27 @@ func _process(delta):
 							current_sprite = $BarYellowGem
 			current_sprite.visible = true
 
+
+func set_scale(scale):
+	$OffGem.scale = scale
+	$OffGem0.scale = scale
+	$OffGem1.scale = scale
+	$OffGem2.scale = scale
+	$OffGem3.scale = scale
+	$GreenGem.scale = scale
+	$YellowGem.scale = scale
+	$RedGem.scale = scale
+	$GreenGemPressed.scale = scale
+	$YellowGemPressed.scale = scale
+
+	$BarOffGem.scale.y = scale.y
+	$BarGreenGem.scale.y = scale.y
+	$BarYellowGem.scale.y = scale.y
+	$BarRedGem.scale.y = scale.y
+	$BarGreenGemPressed.scale.y = scale.y
+	$BarYellowGemPressed.scale.y = scale.y
+
+
 func set_type(type):
 	current_type = type
 	current_sprite.visible = false

@@ -5,6 +5,15 @@ var SAVE_FILE_NAME = "user://save_file_2.save"
 var NOTE_SPEED = "note_speed"
 var NOTE_SPEED_MAX = 4.0
 var NOTE_SPEED_MIN = 1.0
+var INVERT_Y = "invert_y"
+var NOTE_SCALE_X = "note_scale_x"
+var NOTE_SCALE_Y = "note_scale_y"
+var NOTE_SCALE_MIN = 0.1
+var NOTE_SCALE_MAX = 2.0
+var NOTE_DELAY = "note_delay"
+
+var CONST_NOTE_LEEWAY_GREEN_SECS = 0.07
+var CONST_NOTE_LEEWAY_YELLOW_SECS = 0.14
 
 var _settings
 var _records
@@ -43,6 +52,14 @@ func get_setting(name):
 	var default = null
 	if name == NOTE_SPEED:
 		default = 1.0
+	if name == INVERT_Y:
+		default = false
+	if name == NOTE_SCALE_X:
+		default = 1.0
+	if name == NOTE_SCALE_Y:
+		default = 1.0
+	if name == NOTE_DELAY:
+		default = 0.0
 	return _settings.get(name, default)
 
 

@@ -1,52 +1,61 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://stage/Stage.gd" type="Script" id=1]
-[ext_resource path="res://sprites/Fullscreens-3.png.png" type="Texture" id=2]
-[ext_resource path="res://sprites/bar.png" type="Texture" id=3]
-[ext_resource path="res://sprites/gems.png" type="Texture" id=4]
-[ext_resource path="res://stage/MusicPlayer.gd" type="Script" id=5]
-[ext_resource path="res://stage/MIDIParser.gd" type="Script" id=6]
-[ext_resource path="res://sprites/text.png" type="Texture" id=7]
+[ext_resource path="res://sprites/Fullscreens-4.png.png" type="Texture" id=2]
+[ext_resource path="res://sprites/Fullscreens-3.png.png" type="Texture" id=3]
+[ext_resource path="res://sprites/bar.png" type="Texture" id=4]
+[ext_resource path="res://sprites/gems.png" type="Texture" id=5]
+[ext_resource path="res://stage/MusicPlayer.gd" type="Script" id=6]
+[ext_resource path="res://stage/MIDIParser.gd" type="Script" id=7]
+[ext_resource path="res://fonts/Ramabhadra/Ramabhadra-Regular.ttf" type="DynamicFontData" id=8]
+[ext_resource path="res://sprites/text.png" type="Texture" id=9]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
-atlas = ExtResource( 3 )
+atlas = ExtResource( 4 )
 region = Rect2( 0, 0, 350, 50 )
 
 [sub_resource type="AtlasTexture" id=2]
 flags = 4
-atlas = ExtResource( 4 )
+atlas = ExtResource( 5 )
 region = Rect2( 0, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
-atlas = ExtResource( 4 )
+atlas = ExtResource( 5 )
 region = Rect2( 0, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 4
-atlas = ExtResource( 4 )
+atlas = ExtResource( 5 )
 region = Rect2( 0, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=5]
 flags = 4
-atlas = ExtResource( 3 )
+atlas = ExtResource( 4 )
 region = Rect2( 0, 400, 350, 50 )
 
 [sub_resource type="AtlasTexture" id=6]
 flags = 4
-atlas = ExtResource( 3 )
+atlas = ExtResource( 4 )
 region = Rect2( 0, 400, 350, 50 )
 
-[sub_resource type="AtlasTexture" id=7]
-flags = 4
-atlas = ExtResource( 7 )
-region = Rect2( 57, 292.448, 224, 115 )
+[sub_resource type="DynamicFont" id=7]
+size = 14
+font_data = ExtResource( 8 )
 
 [sub_resource type="AtlasTexture" id=8]
 flags = 4
-atlas = ExtResource( 7 )
+atlas = ExtResource( 9 )
+region = Rect2( 57, 292.448, 224, 115 )
+
+[sub_resource type="AtlasTexture" id=9]
+flags = 4
+atlas = ExtResource( 9 )
 region = Rect2( -6, 604.689, 308, 91 )
+
+[sub_resource type="DynamicFont" id=10]
+font_data = ExtResource( 8 )
 
 [node name="Stage" type="Node2D"]
 position = Vector2( 0.0734253, 0 )
@@ -55,69 +64,77 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="BG" type="Sprite" parent="."]
+[node name="Invertible" type="Node2D" parent="."]
+
+[node name="BG" type="Sprite" parent="Invertible"]
 position = Vector2( 300, 256 )
 texture = ExtResource( 2 )
 
-[node name="bar" type="Sprite" parent="."]
+[node name="Highway" type="Sprite" parent="Invertible"]
+position = Vector2( 325, 256 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 150, 0, 350, 512 )
+
+[node name="bar" type="Sprite" parent="Invertible"]
 position = Vector2( 325.5, 420 )
 texture = SubResource( 1 )
 
-[node name="lane_input_0" type="Sprite" parent="."]
+[node name="lane_input_0" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
 texture = SubResource( 2 )
 
-[node name="lane_input_1" type="Sprite" parent="."]
+[node name="lane_input_1" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
 texture = SubResource( 2 )
 
-[node name="lane_input_2" type="Sprite" parent="."]
+[node name="lane_input_2" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
 texture = SubResource( 2 )
 
-[node name="lane_input_3" type="Sprite" parent="."]
+[node name="lane_input_3" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
 texture = SubResource( 2 )
 
-[node name="lane_input_4" type="Sprite" parent="."]
+[node name="lane_input_4" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
 texture = SubResource( 2 )
 
-[node name="lane_input_5" type="Sprite" parent="."]
+[node name="lane_input_5" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
 texture = SubResource( 2 )
 
-[node name="lane_input_6" type="Sprite" parent="."]
+[node name="lane_input_6" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
 texture = SubResource( 3 )
 
-[node name="lane_input_7" type="Sprite" parent="."]
+[node name="lane_input_7" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 2
 texture = SubResource( 4 )
 
-[node name="lane_input_8" type="Sprite" parent="."]
+[node name="lane_input_8" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 150, 420 )
 z_index = 1
 texture = SubResource( 5 )
 
-[node name="lane_input_9" type="Sprite" parent="."]
+[node name="lane_input_9" type="Sprite" parent="Invertible"]
 visible = false
 position = Vector2( 0, 420 )
 z_index = 1
@@ -125,7 +142,7 @@ texture = SubResource( 6 )
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 editor/display_folded = true
-script = ExtResource( 5 )
+script = ExtResource( 6 )
 
 [node name="start_timer" type="Timer" parent="MusicPlayer"]
 wait_time = 2.0
@@ -136,37 +153,41 @@ wait_time = 2.0
 one_shot = true
 
 [node name="MIDIParser" type="Node2D" parent="."]
-script = ExtResource( 6 )
+script = ExtResource( 7 )
 
 [node name="ScoreDisplay" type="RichTextLabel" parent="."]
-margin_left = 65.0
+margin_left = 75.0
 margin_top = 10.0
-margin_right = 149.0
-margin_bottom = 25.0
+margin_right = 142.0
+margin_bottom = 39.0
+custom_fonts/normal_font = SubResource( 7 )
 text = "0"
 scroll_active = false
 
 [node name="SCORE" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 57.0
-margin_bottom = 33.0
+margin_right = 112.0
+margin_bottom = 42.0
+custom_fonts/normal_font = SubResource( 7 )
 text = "SCORE:"
 scroll_active = false
 
 [node name="StreakDisplay" type="RichTextLabel" parent="."]
-margin_left = 64.0
+margin_left = 75.0
 margin_top = 30.0
-margin_right = 148.0
-margin_bottom = 45.0
+margin_right = 151.0
+margin_bottom = 60.0
+custom_fonts/normal_font = SubResource( 7 )
 text = "0"
 scroll_active = false
 
 [node name="STREAK" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 30.0
-margin_right = 60.0
-margin_bottom = 45.0
+margin_right = 87.0
+margin_bottom = 66.0
+custom_fonts/normal_font = SubResource( 7 )
 text = "STREAK:"
 scroll_active = false
 
@@ -175,7 +196,7 @@ visible = false
 position = Vector2( 300, 325 )
 scale = Vector2( 0.15, 0.15 )
 z_index = 6
-texture = SubResource( 7 )
+texture = SubResource( 8 )
 
 [node name="PauseSprites" type="Node2D" parent="."]
 visible = false
@@ -184,7 +205,7 @@ z_index = 6
 
 [node name="Pause" type="Sprite" parent="PauseSprites"]
 position = Vector2( -15, -120 )
-texture = SubResource( 8 )
+texture = SubResource( 9 )
 
 [node name="RESUME" type="RichTextLabel" parent="PauseSprites"]
 margin_right = 60.0
@@ -210,14 +231,15 @@ text = "Speed: 1.0"
 margin_left = 10.0
 margin_top = 465.0
 margin_right = 144.0
-margin_bottom = 488.0
+margin_bottom = 500.0
+custom_fonts/normal_font = SubResource( 10 )
 text = "ENTER: Pause"
 scroll_active = false
 
 [node name="SongProgress" type="Sprite" parent="."]
 position = Vector2( 500, 500 )
 scale = Vector2( 1e-05, 1 )
-texture = ExtResource( 3 )
+texture = ExtResource( 4 )
 region_enabled = true
 region_rect = Rect2( 107.096, 168.283, 130, 13.65 )
 [connection signal="finished" from="MusicPlayer" to="MusicPlayer" method="_on_MusicPlayer_finished"]
