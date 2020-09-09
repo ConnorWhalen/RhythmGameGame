@@ -6,8 +6,8 @@ onready var GemSprite = preload("res://common/GemSprite.gd")
 signal mode_menu
 
 enum Settings {
-	NOTE_HEIGHT,
 	NOTE_WIDTH,
+	NOTE_HEIGHT,
 	NOTE_DIRECTION,
 	ADJUST_LAG
 }

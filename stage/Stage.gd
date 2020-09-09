@@ -247,7 +247,6 @@ func check_gems():
 					score += YELLOW_HOLD_POINTS
 				gem.hold_progress_time += HOLD_PROGRESS_PERIOD
 		else:
-			$Invertible.remove_child(gem)
 			current_streak = 0
 			held_remove_indices.append(i)
 
